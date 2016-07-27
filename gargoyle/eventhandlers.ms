@@ -1,4 +1,11 @@
 # Live version, copy to main.ms
+# SAVE STRUCTURE (CURRENT):
+# 0: ID
+# 1: TIME
+# 2: LOCATION
+# 3: ACTION
+# 4: PLAYER_UUID
+# 5: ENTITY_UUID
 bind(vehicle_enter, array(priority: monitor), array(vehicletype: 'HORSE'), @event,    
 	if(@event[passengertype] == 'PLAYER' && !is_cancelled()){
 		# Declare variables
