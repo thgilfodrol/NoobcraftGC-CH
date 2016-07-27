@@ -10,6 +10,8 @@ export('weapons', array(
 
 # Scope zoom mechanic
 # TODO: Individual player binds to allow for arena integration
+# TODO: Add zoom key to gun stats and use that instead of constants
+# TODO: Use _get_active_gun(@player) instead of remaking the array here
 bind(player_toggle_sneak, null, null, @event,
     @p = @event[player];
 	@uuid = puuid(@p);
@@ -37,6 +39,7 @@ bind(player_toggle_sneak, null, null, @event,
 # Fires projectiles with stats according to what weapon the player is holding
 # TODO: Individual player binds to allow for arena integration
 bind(player_interact, null, null, @event,
+	include('core-procs.ms');
 	if (@event[action] == 'right_click_block' || @event[action] == 'right_click_air'){
 		if (@event[hand] == 'main_hand'){
 			@p = @event[player];
@@ -81,7 +84,8 @@ bind(player_interact, null, null, @event,
 bind(projectile_hit, null, array(type: 'SNOWBALL'), @event, @thg){
 	@bullets = import('bullets', array());
 	@i = 0;
-	foreach(@bullet in @bullets){		
+	# Consider making a proc for this
+	foreach(@bullet in @bullets){
 		if (@bullet[0] == @event[id]){
 			array_remove(@bullets, @i);
 			break();
@@ -117,6 +121,7 @@ bind(entity_damage, null, array(cause: 'PROJECTILE'), @event, @thg){
 
 # Custom death messages for fps module related deaths
 bind(player_death, array(priority: 'HIGHEST'), null, @event, @thg){
+	include('core-procs.ms');
 	@e = @event[cause];
 	if (@e[cause] == 'PROJECTILE'){
 		@bullets = import('bullets', array());
