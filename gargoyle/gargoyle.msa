@@ -1,0 +1,245 @@
+# Alias for /gargoyle
+*:/go [$] = >>>
+	run_cmd('/gargoyle '.$);
+<<<
+
+# Main command
+# Horse tracking system with Prism-like subcommand syntax
+*:/gargoyle [$] = >>>
+    @p = player(); # store the player with a variable
+	include('pagination.ms');
+    # Configuration
+	assign(@permnode, 'nc.gargoyle');
+    assign(@ptag, '&cGargoyle // ');
+    assign(@mcol, '&7');
+    assign(@kcol, '&8');
+	assign(@ver, 'v0.2.4');
+    if(has_permission(@p, @permnode)){ # Player has the required permission	
+		if (@p == '~console'){
+			die('Gargoyle // You cannot use this command from console.');
+		}
+		if ($ != ''){
+			@args = parse_args($);
+			assign(@starttime, time());
+			if (to_lower(@args[0]) == '?'){
+				msg(colorize(@ptag.' &6--- Basic Usage ---'));
+				msg(colorize(@kcol.'/gargoyle &c(l|lookup) (params)'.@mcol.'- Search the database.'));
+				msg(colorize(@kcol.'/gargoyle &c(lid|lookupid) (lookupid)'.@mcol.'- Searches for a horse with the specified UUID. Does not work on dead horses.'));
+				msg(colorize(@kcol.'/gargoyle &cparams '.@mcol.'- List parameter help.'));
+				msg(colorize(@kcol.'/gargoyle &cpurge '.@mcol.'- Admin only. Wipe all '.@kcol.'Gargoyle'.@mcol.' logs from the database.'));
+				msg(colorize(@kcol.'/gargoyle &c? '.@mcol.'- Bring up this message.'));
+			} else if (to_lower(@args[0]) == 'l' || to_lower(@args[0]) == 'lookup'){
+				msg(colorize(@ptag.@kcol.'Lookups are currently WIP.'));
+				# Check if more than just the lookup argument was sent in
+				if (array_size(@args) > 1){					
+					assign(@largs, @args[cslice(1, array_size(@args) - 1)]);
+					#assign(@params, array());
+					assign(@radius, 5);
+					assign(@time, 86400);
+					assign(@players, array());
+					foreach(@value in @largs){
+						if (string_position(@value, ':') == '-1' || length(@value) < 3){
+							die(colorize(@ptag.@kcol.'Invalid argument \''.@value.'\'.'));
+						}
+						assign(@value, reg_split(':', @value));
+						# Parameter parsing
+						if (@value[0] != null && @value[1] != null){ # null checks
+							if (@value[0] == 'r' && reg_match('(\\d+)', @value[1])){
+								if (@value[1] > 0){
+									if (@value[1] > 100){
+										assign(@radius, 100);
+										msg(colorize(@ptag.@mcol.'Limiting radius to 100 to minimize lag.'));								
+									} else{
+										assign(@radius, @value[1]);
+									}
+								} else{
+									die(colorize(@ptag.@mcol.'Error: radius must not be negative.'));
+								}		
+							} else if(@value[0] == 't' && length(@value[1]) >= 2 && reg_count('\\d', substr(@value[1], 0, length(@value[1]) - 1)) > 0){
+								# 21h {0, 1, 2}
+								# 1h {0, 1} 
+								assign(@qty, substr(@value[1], 0, length(@value[1]) - 1)); #substr is inclusive lower bound, exclusive upper bound
+								if (@qty > 0){
+									assign(@unit, substr(@value[1], length(@value[1]) - 1));
+									# Due for cleanup (should be a proc) 
+									switch(@unit){ 
+										case 's':
+											if (@qty <= 2419200){
+												assign(@time, multiply(@qty, 1000));
+											} else{
+												assign(@time, 2419200000);
+											}
+										case 'm':
+											if (@qty <= 40320){
+												assign(@time, @qty * 60000);
+											} else{
+												assign(@time, 2419200000);
+											}										
+										case 'h':
+											if (@qty <= 672){
+												assign(@time, @qty * 3600000);
+											} else{
+												assign(@time, 2419200000);
+											}
+										case 'd':
+											if (@qty <= 28){
+												assign(@time, @qty * 86400000);
+											} else{
+												assign(@time, 2419200000);
+											}										
+										case 'w':
+											if (@qty <= 4){
+												assign(@time, @qty * 604800000);
+											} else{
+												assign(@time, 2419200000);
+											}
+										default:
+											die(colorize(@ptag.@mcol.'Error: unrecognized unit '.@kcol.@unit.@mcol.'.'));
+									}
+								} else{
+									die(colorize(@ptag.@mcol.'Error: time must not be negative.'));
+								}
+							} else if(@value[0] == 'p' && length(@value[1]) > 0){
+								assign(@players, reg_split(',', @value[1]));
+							} else{
+								die(colorize(@ptag.@mcol.'Invalid or unrecognized parameter '.array_implode(@value, ':')));
+							}
+						} else{
+							die(colorize(@ptag.@mcol.'Invalid parameter '.array_implode(@value, ':')));
+						}
+					}
+					assign(@params, associative_array(radius: @radius, time: @time, players: @players));
+					if (@params[players] != array()){ # if there are player names in the query
+						msg(colorize(@ptag.@kcol.'Player name filtering is currently not supported.'));
+					}
+					assign(@ploc, array_normalize(ploc())[cslice(0, 3)]);
+					# Sorting					
+					x_new_thread('grl_'.time().'_'.@p, closure(){
+						# Switched to alternate thread
+						assign(@cid, get_value('testing.olympus.ht.cid'));						
+						assign(@logs, array());						
+						for(assign(@i, @cid), has_value('testing.olympus.ht.data.'.@i), @i--){
+							assign(@cidval, get_value('testing.olympus.ht.data.'.@i));
+							# happened at 1100, now it's 1300
+							# @starttime - @cidval[1] is the diff (200ms ago)
+							# check if subtract(@starttime, @cidval[1]) <= @params[time] to determine validity
+							# alternatively, check if @cidval[1] >= subtract(@starttime, @params[time])  ## 1100 >= 1000 if @params[time] is 300ms
+							assign(@sincetime, subtract(@starttime, @params[time]));							
+							if (@ploc[3] == @cidval[2][3]){ # world is same
+								# assume incident happened at (1887, 69, -3662)
+								# assume current ploc is (1885, 69, -3661) 
+								# Warning: pyramid below
+								if (@ploc[0] > subtract(@cidval[2][0], @params[radius]) && @ploc[0] < add(@cidval[2][0], @params[radius])){
+									if (@ploc[1] > subtract(@cidval[2][1], @params[radius]) && @ploc[1] < add(@cidval[2][1], @params[radius])){
+										if (@ploc[2] > subtract(@cidval[2][2], @params[radius]) && @ploc[2] < add(@cidval[2][2], @params[radius])){
+											if (multiply(@cidval[1], 1000) >= @sincetime){
+												array_push(@logs, @cidval);
+											}
+										}
+									}
+								}
+							}
+						}
+						export('testing.olympus.ht.'.@p.'.lastlookup', @logs);
+						export('testing.olympus.ht.'.@p.'.currentpage', 1);
+						_paginate_gargoyle_lookup(@logs, 1);
+						msg(colorize(@ptag.@mcol.'Operation completed in '.subtract(time() - @starttime).'ms.'));
+					});
+				} else{
+					die(colorize(@ptag.@kcol.'You are missing parameters for this operation.'));
+				}
+			} else if (to_lower(@args[0]) == 'lid' || to_lower(@args[0]) == 'lookupid'){
+				if (array_size(@args) == 2){
+					x_new_thread('grlid_'.time().'_'.@p, closure(){
+						if (has_value('testing.olympus.ht.data', @args[1])){
+							assign(@horse, get_value('testing.olympus.ht.data', @args[1]));
+							if (entity_exists(@horse[5])){
+								assign(@eloc, entity_loc(@horse[5]));
+								assign(@espec, entity_spec(@horse[5]));
+								msg(colorize(@ptag.@mcol.'Showing results for lookup id '.@kcol.'#'.@args[1].@mcol.'.'));
+								msg(colorize(@kcol.'Type: &3'.entity_type(@horse[5])));
+								msg(colorize(@kcol.'Variant: &3'.@espec[variant]));
+								msg(colorize(@kcol.'Last recorded location: &3('.@horse[2][0].', '.@horse[2][1].', '.@horse[2][2].')&3 '.@mcol.'in world &3'.@horse[2][3]));
+								msg(colorize(@kcol.'Current location: &3('.floor(@eloc[0]).', '.floor(@eloc[1]).', '.floor(@eloc[2]).')&3 '.@mcol.'in world &3'.@eloc[3]));
+								msg(colorize(@kcol.'UUID: &3'.@horse[5]));
+								msg(colorize(@kcol.'Details: '));
+								if (@espec[armor] != null){
+									msg(colorize(@kcol.' -> '.@mcol.'Armour: &3'.@espec[armor][name].@mcol.' &3(#'.@espec[armor][type].')'));
+								} else{
+									msg(colorize(@kcol.' -> '.@mcol.'Armour: &3false'));
+								}
+								if (@espec[saddle] != null){
+									msg(colorize(@kcol.' -> '.@mcol.'Saddle: &3'.@espec[saddle][name].@mcol.' &3(#'.@espec[saddle][type].')'));
+								} else{
+									msg(colorize(@kcol.' -> '.@mcol.'Saddle: &3false'));
+								}
+								msg(colorize(@kcol.' -> '.@mcol.'Chest: &3'.@espec[chest]));
+								msg(colorize(@kcol.' -> '.@mcol.'Jump: &3'.@espec[jump]));
+								msg(colorize(@kcol.' -> '.@mcol.'Coat: &3'.@espec[color].@mcol.' coloured, styled with &3'.@espec[style]));
+							} else{
+								msg(colorize(@ptag.@mcol.'Could not find a loaded horse entity matching lookup id '.@kcol.'#'.@args[1].'.'));
+								msg(colorize(@mcol.'This can be caused by a couple reasons- the horse may be in an unloaded chunk, or it may not exist anymore.'));
+							}
+						} else{
+							msg(colorize(@ptag.@mcol.'Lookup id '.@kcol.'#'.@args[1].@mcol.' does not appear to exist.'));
+						}
+					});
+				} else{
+					die(colorize(@ptag.@kcol.'You are missing parameters for this operation.'));
+				}
+			} else if (to_lower(@args[0]) == 'pg' || to_lower(@args[0]) == 'page'){
+				if (array_size(@args) > 1){
+					assign(@currpg, import('testing.olympus.ht.'.@p.'.currentpage', 1));
+					assign(@newpg, add(@currpg, 1));
+					assign(@lastlookup, import('testing.olympus.ht.'.@p.'.lastlookup'));
+					if (@lastlookup == null){
+						die(colorize(@ptag.@kcol.'There\'s no saved query to paginate. Try your lookup again.'));
+					}
+					if (to_lower(@args[1]) == 'next'){
+						x_new_thread('grpg_'.time().'_'.@p, closure(){
+							_paginate_gargoyle_lookup(@lastlookup, @newpg);
+							msg(colorize(@ptag.@mcol.'Operation completed in '.subtract(time() - @starttime).'ms.'));
+						});
+						export('testing.olympus.ht.'.@p.'.currentpage', @newpg);
+					} else if (is_numeric(@args[1])){
+						x_new_thread('grpg_'.time().'_'.@p, closure(){
+							_paginate_gargoyle_lookup(@lastlookup, integer(@args[1]));
+							msg(colorize(@ptag.@mcol.'Operation completed in '.subtract(time() - @starttime).'ms.'));
+						});
+						export('testing.olympus.ht.'.@p.'.currentpage', integer(@args[1]));
+					} else{
+						die(colorize(@ptag.@kcol.'Invalid arguments.'));
+					}
+				}
+			} else if (to_lower(@args[0]) == 'params'){
+				msg(colorize(@ptag.' &6--- Parameters Help ---'));
+				msg(colorize(@kcol.'r:[radius]'.@mcol.' e.g. 20, or 100. Defaults to 10.'));
+				msg(colorize(@kcol.'p:[player]'.@mcol.' Like \'ThgilFoDrol\'. No default.'));
+				msg(colorize(@kcol.'t:[time]'.@mcol.' Events since x long ago. Like 1s(seconds), 20m(minutes), 1h(hour), 7d(days), 2w(weeks). Defaults to 1d.'));
+				msg(colorize(@kcol.'id:[#]'.@mcol.' Record id. Useful for single action lookups if you know the specific id.'));
+			} else if (to_lower(@args[0]) == 'purge'){
+				if (has_permission('nc.gargoyle.purge')){
+					msg(time()); # start
+					x_new_thread('grp_'.time().'_'.@p, closure(){
+						assign(@logs, get_values('testing.olympus.ht.data'));
+						foreach(@key: @value in @logs){
+							clear_value(@key);
+						}
+						msg(time()); # end
+						die(colorize(@ptag.'&4Purged '.array_size(@logs).' entries.'));
+					});
+				} else{
+					die(colorize(@ptag.@mcol.'You do not have permission to use this command.'));
+				}
+			} else{
+				msg(colorize(@ptag.@mcol.'The NoobCraft Sentry - By &6ThgilFoDrol '.@kcol.@ver));
+				die(colorize(@ptag.@kcol.'Help: '.@mcol.'/gargoyle ?'));
+			}
+		} else {
+			msg(colorize(@ptag.@mcol.'The NoobCraft Sentry - By &6ThgilFoDrol '.@kcol.@ver));
+			die(colorize(@ptag.@kcol.'Help: '.@mcol.'/gargoyle ?'));
+		}
+    } else{ # they do not have the required permission node
+		die(colorize(@ptag.@mcol.'You do not have permission to use this command.'));
+    }
+<<<
