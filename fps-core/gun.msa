@@ -2,6 +2,7 @@
 # Don't forget safety goggles
 *:/gun [$] = >>>
 	assign(@p, player());
+	include('core-events.ms');
     if(has_permission(@p, 'nc.test')){
         if($ == null){
 			msg(colorize('&7Welcome to the NC FPS Experiment.'));
@@ -14,6 +15,7 @@
 					msg(colorize('&b/gun reload &7- Reloads your gun (temporary placeholder)'));
 					msg(colorize('&b/gun help &7- Show this message.'));
 				case 'reload': # Placeholder for now, pending implementation of more polished gun reload mechanic
+					# TODO: turn into procedure
 					@gun = _get_active_gun(@p);					
 					if (_is_gun(@gun)){
 						@gunstats = _gun_stats(@gun);
