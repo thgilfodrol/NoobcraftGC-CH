@@ -1,0 +1,91 @@
+# Experimental and volatile- handle with caution
+# Don't forget safety goggles
+*:/gun [$] = >>>
+	assign(@p, player());
+    if(has_permission(@p, 'nc.test')){
+        if($ == null){
+			msg(colorize('&7Welcome to the NC FPS Experiment.'));
+			msg(colorize('&7Use &b/gun help&7 for command usage.'));
+		} else{
+			@args = parse_args($);
+			switch(to_lower(@args[0])){
+				case 'help':
+					msg(colorize('&7Available subcommands:'));
+					msg(colorize('&b/gun reload &7- Reloads your gun (temporary placeholder)'));
+					msg(colorize('&b/gun help &7- Show this message.'));
+				case 'reload': # Placeholder for now, pending implementation of more polished gun reload mechanic
+					@gun = _get_active_gun(@p);					
+					if (_is_gun(@gun)){
+						@gunstats = _gun_stats(@gun);
+						msg(colorize('&7RELOADING...'));
+						export(@p.'.reloadtask', set_timeout(@gunstats[reloadspeed], closure(){
+							if (ponline(@p)){
+								set_pexp(@p, 0);
+								set_plevel(@p, @gunstats[magsize]);
+								msg(colorize('&7RELOADED!'));
+							}
+						}));
+					}					
+				case 'test1':
+					@uuid = puuid(@p);
+					@target = array_normalize(pcursor(@p))[cslice(0, 3)];
+					#@target[1] -= 0.2;
+					@target[2] += 0.5;
+					shoot_projectile(@uuid, 'ARROW', @target);
+				case 'dummy':
+					@pcursor = array_normalize(pcursor())[cslice(0, 3)];
+					@pcursor[1] += 1.0;
+					@dummy = spawn_entity('ARMOR_STAND', 1, @pcursor)[0];
+					@dummies = import('dummies', array());
+					array_push(@dummies, @dummy);
+					export('dummies', @dummies);
+					
+					@spec = entity_spec(@dummy);
+					@spec[arms] = true;
+					@spec[gravity] = false;
+					@spec[poses][poseArmLeft] = array(0.0, 0.0, -89.55);
+					@spec[poses][poseArmRight] = array(0.0, 0.0, 89.55);
+					set_entity_spec(@dummy, @spec);
+					
+					#set_mob_equipment(@dummy, array(HELMET: array(type: 397, data: 3, meta:array('SkullOwner': 'md_5'))));					
+					# @dummyhead = spawn_entity('ARMOR_STAND', 1, @pcursor)[0];
+					# @spec = entity_spec(@dummy);
+					# @spec[arms] = true;
+					# @spec[gravity] = false;
+					# @spec[visible] = false;
+					# @spec[poses][poseArmRight] = array(-0.14, 0.78, 89.64);
+					# set_entity_spec(@dummy, @spec);
+				case 'dmgtest':
+					damage_entity(puuid(@p), 10, puuid(@p));
+				case 'turret':
+					@pcursor = array_normalize(pcursor())[cslice(0, 3)];
+					@pcursor[1] += 1.0;
+					@turret = spawn_entity('SKELETON', 1, @pcursor)[0];
+					@turrets = import('turrets', array());
+					array_push(@turrets, array(@turret, @p));
+					export('turrets', @turrets);
+					
+					set_max_health(@turret, 100.0);
+					set_mob_equipment(@turret, array(HELMET: array(type: 310)));
+				case 'moddummy':
+					@dummies = import('dummies', array());
+					if (array_size(@dummies) > 0){
+						if (array_size(@args) == 5){
+							@dummy = @dummies[0];
+							@spec = entity_spec(@dummy);
+							@spec[poses][@args[1]] = array(@args[2], @args[3], @args[4]);
+							set_entity_spec(@dummy, @spec);						
+						} else{
+							die('Please specify the pose, x, y, z.');
+						}
+					} else{
+						die('Spawn a dummy first.');
+					}
+				default:
+					die(colorize('&7Invalid subcommand.'));
+			}
+		}
+    } else{
+        msg(colorize('&4Insufficient permissions.'));
+    }
+<<<
