@@ -1,6 +1,6 @@
 # Emotes
-A bunch of chat emotes.
-() = required argument
+A bunch of chat emotes.  
+() = required argument  
 [] = optional argument
 ## 8ball
 Asks the server announcer a question.
