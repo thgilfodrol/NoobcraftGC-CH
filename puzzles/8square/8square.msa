@@ -1,0 +1,42 @@
+*:/8sq [$] = >>>
+    include('procs.ms');
+	@p = player();
+    if (has_permission('nc.test')){
+		if ($ != ''){
+			@args = parse_args($);
+			switch(to_lower(@args[0])){
+				case 'data':
+					if (array_size(@args) == 3){
+						msg('Cell at ('.@args[1].','.@args[2].') has a value of '._cell_value(array(@args[1], @args[2]))[0].'.');
+						msg('Its adjacent cells include: '._adjacent_cells(array(@args[1], @args[2])));
+					} else{
+						msg(colorize('&7Missing parameters. Usage: /8sq data <row> <col>'));
+					}
+				case 'blank':
+					msg('Blank cell: ('.array_implode(_blank_cell(), ',').')');
+				case 'solve':
+					if (array_size(@args) == 2){
+						
+					} else{
+						msg(colorize('&7Attempt to solve the square, running for maxiter number of iterations.'));
+						msg(colorize('&7Usage: /8sq solve <maxiter>'));
+					}
+				case 'dump':
+					_dump_cells();
+				case 'collapse':
+					msg(_array_collapse());
+				default:
+					msg(colorize('&7Unrecognized sub-command.'));
+					msg(colorize('&7Available sub-commands: data, blank'));
+			}
+		} else{
+			msg(colorize('&7Welcome to 8-square, where we push numbers around for fun.'));
+			msg(colorize('&7Available sub-commands: data, blank'));
+		}
+    } else{
+		msg(colorize('You do not have permission to use this command.'));
+    }
+<<<
+
+# Random shaders pic for inspiration
+# http://i.imgur.com/SO2LkV4.jpg 
