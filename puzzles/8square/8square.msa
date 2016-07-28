@@ -24,7 +24,9 @@
 				case 'dump':
 					_dump_cells();
 				case 'collapse':
-					msg(_array_collapse());
+					msg(_array_collapsed());
+				case 'check':
+					msg(_is_solved());
 				default:
 					msg(colorize('&7Unrecognized sub-command.'));
 					msg(colorize('&7Available sub-commands: data, blank'));

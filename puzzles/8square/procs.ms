@@ -65,16 +65,16 @@ proc _dump_cells(){
 }
 
 # Returns a 1 dimensional array containing the cells from left to right, top to bottom
-# Noteworthy calculations: 
+# Noteworthy calculations: (if I ever make it more portable) 
 # array[@i][@j] = array[@i*array_size(@i) + @j]
 # array[@t] = array[floor(@t / array_size(@i))][@t - floor(@t / array_size(@i)) * @array_size(@i)] 
-proc _array_collapse(){
+proc _array_collapsed(){
 	@row = import('8square.z');
 	@col = import('8square.y');
 	@1darray = array();
 	for(@i = 0, @i < array_size(@row), @i++){
 		for(@j = 0, @j < array_size(@col), @j++){
-			@1darray[] = array(@i, @j);			
+			@1darray[] = array(@i, @j);
 		}
 	}
 	return(@1darray);
@@ -82,9 +82,13 @@ proc _array_collapse(){
 
 # Check if the square is solved
 proc _is_solved(){
-	# for(@i = 0, @){
-	
-	# }
+	@cells = _array_collapsed();
+	for(@i = 1, @i < array_size(@cells), @i++){
+		if (_cell_value(@cells[@i])[0] < _cell_value(@cells[@i - 1])[0]){
+			return(false);
+		}
+	}
+	return(false);
 }
 
 # Attempt to solve the square, running for maxiter number of iterations
