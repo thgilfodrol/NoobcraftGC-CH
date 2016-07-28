@@ -91,9 +91,24 @@ proc _is_solved(){
 	return(false);
 }
 
+# 
+proc _move(@cell){
+	@x = import('8square.x');
+	@row = import('8square.z');
+	@col = import('8square.y');
+	@world = import('8square.world');
+	@blank = _blank_cell();
+	set_sign_text(array(@x, @col[@blank[0]], @row[@blank[1]], @world), _cell_value(@cell)); # set blank cell value to input cell
+	set_sign_text(array(@x, @col[@cell[0]], @row[@cell[1]], @world), ''); # clear input cell
+}
+
 # Attempt to solve the square, running for maxiter number of iterations
 proc _solve(@maxiter){
-	for(@c = 0, @c <= @maxiter, @c++){
-		
+	for(@c = 0, @c <= @maxiter, @c++){		
+		queue_push(closure(
+			if (_is_solved()){
+				queue_clear('8square');
+			}
+		), '8square');
 	}
 }

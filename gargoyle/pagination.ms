@@ -1,4 +1,4 @@
-# Displays to the player the logs as per the parameters they included
+# Displays to the player the logs as per the parameters they included (base proc credits to CH wiki)
 # Accepts an array with relevant information, the page number, and the amount of results to list per page
 proc _paginate_gargoyle_lookup(@list, @page, @perpage=5) {
     assign(@ptag, '&cGargoyle // ');

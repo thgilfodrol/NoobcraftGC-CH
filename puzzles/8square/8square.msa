@@ -27,6 +27,10 @@
 					msg(_array_collapsed());
 				case 'check':
 					msg(_is_solved());
+				case 'move':
+					if (array_size(@args) == 3){
+						_move(array(@args[1], @args[2]));
+					}
 				default:
 					msg(colorize('&7Unrecognized sub-command.'));
 					msg(colorize('&7Available sub-commands: data, blank'));
