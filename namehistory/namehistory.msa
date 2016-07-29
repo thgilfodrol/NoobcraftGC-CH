@@ -1,30 +1,41 @@
-*:/namehistory [$player] = >>>
+# TODO: (maybe) switch to using register_command() 
+*:/namehistory [$player] [$] = >>>
 	@p = player();
 	@ptag = '&9[&6NH&9] ';
 	@mcol = '&7';
 	@kcol = '&6';
 	@dateformat = 'yyyy/MM/dd \'at\' HH:mm:ss z';
     if(has_permission(@p, 'nc.namehistory')){
-        if ($player != ''){
+		if ($player != ''){
 			http_request('https://api.mojang.com/users/profiles/minecraft/'.$player, closure(@response){
 				if (@response[responseCode] == 200){
-					@uuid = replace(json_decode(@response[body])[id], '-', '');
+					@uuid = json_decode(@response[body])[id];
 					http_request('https://api.mojang.com/user/profiles/'.@uuid.'/names', closure(@response){
 						if (@response[responseCode] == 200){
 							@body = json_decode(@response[body]);
-							@bodysize = array_size(@body);
+							@bodysize = array_size(@body);							
+							@flags = array();
+							if ($ != ''){
+								@flags = parse_args($);								
+							}
 							if (@bodysize > 1){
 								msg(colorize(@ptag.@mcol.'Found a total of '.@kcol.(@bodysize - 1).@mcol.' name changes for '.@kcol.$player.@mcol.'.'));
+								if (array_contains(@flags, '-u')){
+									msg(colorize(@ptag.@mcol.'UUID: '.@kcol.@uuid));
+								}
 								msg(colorize(@ptag.@mcol.'Original Username: '.@kcol.@body[0][name]));
 								msg(colorize(@ptag.@mcol.'Previous Username(s): '));
 								for(@i = 1, @i < @bodysize - 1, @i++){								
 									msg(colorize(@ptag.@mcol.'-> '.@kcol.@body[@i][name].@mcol.', changed at '.@kcol.simple_date(@dateformat, @body[@i][changedToAt])));
 								}
 								msg(colorize(@ptag.@mcol.'Current Username: '));
-								msg(colorize(@ptag.@mcol.'-> '.@kcol.@body[@bodysize - 1][name].@mcol.', changed at '.@kcol.simple_date(@dateformat, @body[@bodysize - 1][changedToAt])));
+								msg(colorize(@ptag.@mcol.'-> '.@kcol.@body[@bodysize - 1][name].@mcol.', changed at '.@kcol.simple_date(@dateformat, @body[@bodysize - 1][changedToAt])));								
 							} else{
 								msg(colorize(@ptag.@kcol.@body[0][name].@mcol.' has never changed their name.'));
-							}						
+								if (array_contains(@flags, '-u')){
+									msg(colorize(@ptag.@mcol.'UUID: '.@kcol.@uuid));
+								}
+							}							
 						} else{
 							msg(colorize(@ptag.@mcol.'Error: Mojang\'s API servers returned '.@kcol.@response[responseCode].' '.@response[responseText].@mcol.'.'));
 						}					
@@ -46,6 +57,6 @@
     }
 <<<
 
-*:/nh [$player] = >>>
-	run_cmd('/namehistory '.$player);
+*:/nh [$] = >>>
+	run_cmd('/namehistory '.$);
 <<<
