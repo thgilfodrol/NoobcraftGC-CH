@@ -45,3 +45,7 @@
         msg(colorize(@ptag.'&cInsufficient permissions.'));
     }
 <<<
+
+*:/nh [$player] = >>>
+	run_cmd('/namehistory '.$player);
+<<<
