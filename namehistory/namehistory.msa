@@ -1,0 +1,42 @@
+*:/namehistory $player = >>>
+	@p = player();
+	@ptag = '&9[&6NH&9] ';
+	@mcol = '&7';
+	@kcol = '&6';
+	@dateformat = 'yyyy/MM/dd \'at\' HH:mm:ss z';
+    if(has_permission(@p, 'nc.test')){
+        http_request('https://api.mojang.com/users/profiles/minecraft/'.$player, closure(@response){
+			if (@response[responseCode] == 200){
+				@uuid = replace(json_decode(@response[body])[id], '-', '');
+				http_request('https://api.mojang.com/user/profiles/'.@uuid.'/names', closure(@response){
+					if (@response[responseCode] == 200){
+						@body = json_decode(@response[body]);
+						@bodysize = array_size(@body);
+						if (@bodysize > 1){
+							msg(colorize(@ptag.@mcol.'Found a total of '.@kcol.(@bodysize - 1).@mcol.' name changes for '.@kcol.$player.@mcol.'.'));
+							msg(colorize(@ptag.@mcol.'Original Username: '.@kcol.@body[0][name]));
+							msg(colorize(@ptag.@mcol.'Previous Username(s): '));
+							for(@i = 1, @i < @bodysize - 1, @i++){								
+								msg(colorize(@ptag.@mcol.'-> '.@kcol.@body[@i][name].@mcol.', changed at '.@kcol.simple_date(@dateformat, @body[@i][changedToAt])));
+							}
+							msg(colorize(@ptag.@mcol.'Current Username: '));
+							msg(colorize(@ptag.@mcol.'-> '.@kcol.@body[@bodysize - 1][name].@mcol.', changed at '.@kcol.simple_date(@dateformat, @body[@bodysize - 1][changedToAt])));
+						} else{
+							msg(colorize(@ptag.@kcol.@body[0][name].@mcol.' has never changed their name.'));
+						}						
+					} else{
+						msg(colorize(@ptag.@mcol.'Error: Mojang\'s API servers returned '.@kcol.@response[responseCode].' '.@response[responseText].@mcol.'.'));
+					}					
+				});
+			} else{
+				if (@response[responseCode] == 204){
+					msg(colorize(@ptag.@mcol.'No player currently named '.@kcol.$player.@mcol.' was found.'));
+				} else{
+					msg(colorize(@ptag.@mcol.'Error: Mojang\'s API servers returned '.@kcol.@response[responseCode].' '.@response[responseText].@mcol.'.'));
+				}
+			}			
+		});
+    } else{
+        msg(colorize(@ptag.'&cInsufficient permissions.'));
+    }
+<<<
