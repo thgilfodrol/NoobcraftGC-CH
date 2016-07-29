@@ -51,8 +51,10 @@
 				}			
 			});
 		} else{
-			msg(colorize(@ptag.@mcol.'Checks the name history of the specified player.'));
-			msg(colorize(@ptag.@mcol.'Usage: '.@kcol.'/namehistory <player>'));
+			msg(colorize(@ptag.@mcol.'Checks the name history of the specified player.'));			
+			msg(colorize(@ptag.@mcol.'Usage: '.@kcol.'/namehistory <player> <flags>'));
+			msg(colorize(@ptag.@mcol.'Flags: '));
+			msg(colorize(@ptag.@kcol.'-u '.@kcol.'Returns the UUID of the player as well.'));
 		}
     } else{
         msg(colorize(@ptag.'&cInsufficient permissions.'));
