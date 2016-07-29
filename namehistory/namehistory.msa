@@ -24,9 +24,11 @@
 									msg(colorize(@ptag.@mcol.'UUID: '.@kcol.@uuid));
 								}
 								msg(colorize(@ptag.@mcol.'Original Username: '.@kcol.@body[0][name]));
-								msg(colorize(@ptag.@mcol.'Previous Username(s): '));
-								for(@i = 1, @i < @bodysize - 1, @i++){								
-									msg(colorize(@ptag.@mcol.'-> '.@kcol.@body[@i][name].@mcol.', changed at '.@kcol.simple_date(@dateformat, @body[@i][changedToAt])));
+								if (@bodysize == 1){
+									msg(colorize(@ptag.@mcol.'Previous Username(s): '));
+									for(@i = 1, @i < @bodysize - 1, @i++){
+										msg(colorize(@ptag.@mcol.'-> '.@kcol.@body[@i][name].@mcol.', changed at '.@kcol.simple_date(@dateformat, @body[@i][changedToAt])));
+									}
 								}
 								msg(colorize(@ptag.@mcol.'Current Username: '));
 								msg(colorize(@ptag.@mcol.'-> '.@kcol.@body[@bodysize - 1][name].@mcol.', changed at '.@kcol.simple_date(@dateformat, @body[@bodysize - 1][changedToAt])));								
