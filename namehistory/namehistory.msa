@@ -24,7 +24,7 @@
 									msg(colorize(@ptag.@mcol.'UUID: '.@kcol.@uuid));
 								}
 								msg(colorize(@ptag.@mcol.'Original Username: '.@kcol.@body[0][name]));
-								if (@bodysize == 1){
+								if (@bodysize > 2){
 									msg(colorize(@ptag.@mcol.'Previous Username(s): '));
 									for(@i = 1, @i < @bodysize - 1, @i++){
 										msg(colorize(@ptag.@mcol.'-> '.@kcol.@body[@i][name].@mcol.', changed at '.@kcol.simple_date(@dateformat, @body[@i][changedToAt])));
