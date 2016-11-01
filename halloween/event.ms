@@ -26,26 +26,26 @@ bind(player_interact, null, null, @event){
                                                                 if(@rand == 10){ #tier 4
                                                                         #rolled number is 10
                                                                         runas('~console', '/essentials:give '.@event[player].' '.@tier4);
-                                                                        runas('~console', '/perm player '.@event[player].' set nc.bats.2016');
+                                                                        runas('~console', '/perm player '.@event[player].' set ch.bats.2016');
                                                                         tmsg(@event[player], colorize('&8[&6Halloween&8] &6You\'ve just learned the bat emote (WIP), and received Jack the Pumpkin!.'));
-                                                                        console('[NCHalloween] Reward of tier 4 granted to '.@event[player].'.');
+                                                                        console('[Halloween] Reward of tier 4 granted to '.@event[player].'.');
                                                                 } else{ #tier 3
                                                                         #rolled number is 8 or 9
                                                                         runas('~console', '/essentials:give '.@event[player].' '.array_rand(@tier3, 1, false)[0]);
                                                                         tmsg(@event[player], colorize('&8[&6Halloween&8] &6You get some treats.'));
-                                                                        console('[NCHalloween] Reward of tier 3 granted to '.@event[player].'.');
+                                                                        console('[Halloween] Reward of tier 3 granted to '.@event[player].'.');
                                                                 }
                                                         } else{ #tier 2
                                                                 #rolled number is 5-7
                                                                 runas('~console', '/essentials:give '.@event[player].' '.array_rand(@tier2, 1, false)[0]);
                                                                 tmsg(@event[player], colorize('&8[&6Halloween&8] &6You get some treats.'));
-                                                                console('[NCHalloween] Reward of tier 2 granted to '.@event[player].'.');
+                                                                console('[Halloween] Reward of tier 2 granted to '.@event[player].'.');
                                                         }
                                                 } else{ #tier 1
                                                         #rolled number is 1-4
                                                         runas('~console', '/essentials:give '.@event[player].' '.array_rand(@tier1, 1, false)[0]);
                                                         tmsg(@event[player], colorize('&8[&6Halloween&8] &6You get some treats.'));
-                                                        console('[NCHalloween] Reward of tier 1 granted to '.@event[player].'.');
+                                                        console('[Halloween] Reward of tier 1 granted to '.@event[player].'.');
                                                 }
                                                 export(@event[player].'.halloween.'.@event[location][0].'.'.@event[location][2], divide(time(), 1000));
                                         } else{
