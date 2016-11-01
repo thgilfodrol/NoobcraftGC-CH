@@ -1,16 +1,16 @@
-*:/nchw [$] = >>>
-        if(has_permission('nc.halloween.admin')){
+*:/chhw [$] = >>>
+        if(has_permission('halloween.admin')){
                 if($ == ''){
-                        msg(colorize('&8[&6Halloween&8] &6This is the Noobcraft Halloween event management system.'));
-                        msg(colorize('&6Use &b/nchw help&6 for command usage.'));
+                        msg(colorize('&8[&6Halloween&8] &6This is the Halloween Trick or Treat event management system.'));
+                        msg(colorize('&6Use &b/chhw help&6 for command usage.'));
                 } else{
                         @args = parse_args($);
                         switch(to_lower(@args[0])){
                                 case 'help':
                                         msg(colorize('&8[&6Halloween&8] &6Available subcommands:'));
-                                        msg(colorize('&b/nchw set <x> <z> &6- Set a Halloween door.'));
-                                        msg(colorize('&b/nchw unset <index> &6- Unset a door at <index> in &b/nchw list&6.'));
-                                        msg(colorize('&b/nchw list &6- List door locations.'));
+                                        msg(colorize('&b/chhw set <x> <z> &6- Set a Halloween door.'));
+                                        msg(colorize('&b/chhw unset <index> &6- Unset a door at <index> in &b/chhw list&6.'));
+                                        msg(colorize('&b/chhw list &6- List door locations.'));
                                 case 'set':
                                         if(array_size(@args) === 3){
                                                 if(is_integral(@args[1]) && is_integral(@args[2])){
