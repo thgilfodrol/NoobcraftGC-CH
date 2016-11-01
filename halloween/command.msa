@@ -1,0 +1,59 @@
+*:/nchw [$] = >>>
+        if(has_permission('nc.halloween.admin')){
+                if($ == ''){
+                        msg(colorize('&8[&6Halloween&8] &6This is the Noobcraft Halloween event management system.'));
+                        msg(colorize('&6Use &b/nchw help&6 for command usage.'));
+                } else{
+                        @args = parse_args($);
+                        switch(to_lower(@args[0])){
+                                case 'help':
+                                        msg(colorize('&8[&6Halloween&8] &6Available subcommands:'));
+                                        msg(colorize('&b/nchw set <x> <z> &6- Set a Halloween door.'));
+                                        msg(colorize('&b/nchw unset <index> &6- Unset a door at <index> in &b/nchw list&6.'));
+                                        msg(colorize('&b/nchw list &6- List door locations.'));
+                                case 'set':
+                                        if(array_size(@args) === 3){
+                                                if(is_integral(@args[1]) && is_integral(@args[2])){
+                                                        @doorlocs = import('halloween.doorlocs', array());
+                                                        array_push(@doorlocs, array(@args[1], @args[2]));
+                                                        export('halloween.doorlocs', @doorlocs);
+                                                        msg(colorize('&8[&6Halloween&8]&a Set new door location at '.@args[1].' '.@args[2].'&a.'));
+                                                } else{
+                                                        msg(colorize('&8[&6Halloween&8]&c Coordinates entered are not valid numbers.'));
+                                                }
+                                        } else{
+                                                msg(colorize('&8[&6Halloween&8]&c Missing arguments: expected 3, found '.array_size(@args).'.'));
+                                        }
+                                case 'unset':
+                                        if(array_size(@args) === 2){
+                                                if(is_integral(@args[1])){
+                                                        @doorlocs = import('halloween.doorlocs', array());
+                                                        if(@args[1] <= array_size(@doorlocs)){
+                                                                msg(colorize('&8[&6Halloween&8]&a Removed door at '.array_remove(@doorlocs, @args[1]).' indexed '.@args[1].'.'));
+                                                        } else{
+                                                                msg(colorize('&8[&6Halloween&8]&c Door at index '.@args[1].' in list does not exist.'));
+                                                        }
+                                                } else{
+                                                        msg(colorize('&8[&6Halloween&8]&c Index entered is not a valid number.'));
+                                                }
+                                        } else{
+                                                msg(colorize('&8[&6Halloween&8]&c Missing arguments: expected 2, found '.array_size(@args).'.'));
+                                        }
+                                case 'list':
+                                        @doorlocs = import('halloween.doorlocs', array());
+                                        if(array_size(@doorlocs) === 0){
+                                                msg(colorize('&8[&6Halloween&8] &6There are no door locations set.'));
+                                        } else{
+                                                msg(colorize('&8[&6Halloween&8] &6Door locations currently set:'));
+                                                for(@i = 0, @i < array_size(@doorlocs), @i++){
+                                                        msg(colorize('&6'.@i.'&7: &e'.@doorlocs[@i][0].' '.@doorlocs[@i][1]));
+                                                }
+                                        }
+                                default:
+                                        msg(colorize('&8[&6Halloween&8] &cInvalid subcommand. Type &b/nchw help&c for help.'));
+                        }
+                }
+        } else{
+                msg(colorize('&8[&6Halloween&8] &cYou do not have permission to use this command.'));
+        }
+<<<
