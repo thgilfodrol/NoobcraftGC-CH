@@ -1,0 +1,9 @@
+*:/cnp = >>>
+    if(has_permission('nc.test')){
+        include('/home/mcma3ncmain/testservers/ncmainclone_2016-12-15/plugins/CommandHelper/LocalPackages/portals/procs.ms');
+        @ploc = ploc();
+        _create_nether_portal(array(@ploc[0], @ploc[1], @ploc[2] - 1, @ploc[3]), array(@ploc[0], @ploc[1], @ploc[2] + 2, @ploc[3]));
+    } else{
+        msg('no perms!');
+    }
+<<<
