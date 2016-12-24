@@ -29,8 +29,45 @@
                 msg(colorize('&6This month\'s perks were graciously contributed by: &2'.array_implode(@donors, '&6, &2')));
             }
         } else{
-            @args = parse_args($);
-            msg(@args[0]);
+            if(pisop()){
+                @args = parse_args($);
+                switch(to_lower(@args[0])){
+                    case 'add':
+                        if(array_size(@args) > 1){
+                            x_new_thread(time(), closure(){
+                                @donors = get_value('olympus.donations.donors');
+                                if(@donors != null){ #if something was saved
+                                    @donors[] = @args[1];
+                                } else{
+                                    @donors = array(@args[1]);
+                                }
+                                store_value('olympus.donations.donors', @donors);
+                            });
+                            msg('Queued to add '.@args[1].' to the donor list.');
+                        } else{
+                            msg('Usage: /goal add <player>');
+                        }
+                    case 'clear':
+                        #if(array_size(@args) > 0){
+                            x_new_thread(time(), closure(){
+                                @donors = get_value('olympus.donations.donors');
+                                if(@donors != null){ #if something was saved
+                                    clear_value('olympus.donations.donors');
+                                }
+                            });
+                        msg('Queued to clear the list of donors.');
+                        #}
+                    case 'total':
+
+                    default:
+                        msg('/goal Command Usages');
+                        msg('Add a donor to the list: /goal add <player>');
+                        msg('Remove a donor from the list: /goal clear');
+                        msg('Set the month\'s donation progress: /goal total <$>');
+                }
+            } else{
+                msg(colorize('&cThese features are admin only.'));
+            }
         }
     } else{
         msg(colorize('&cNo permission. Requires at least &bnc.title.member&c.'));
