@@ -8,7 +8,9 @@
                 @donations = get_value('olympus.donations.total');
 
                 x_run_on_main_thread_later(closure(){
-                @progress = floor(@donations / 5);
+                @fakedonations = @donations;
+                if(@fakedonations > 50){ @fakedonations = 50; }
+                @progress = floor(@fakedonations / 5);
                 @progressbar = array('#','#','#','#','#','#','#','#','#','#');
                 array_insert(@progressbar, '&8', @progress);
                 if(@donations >= 50){
