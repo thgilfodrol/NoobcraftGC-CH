@@ -2,7 +2,10 @@
     if(has_permission('nc.title.member')){
         if($ == null || $ === ''){
             @donations = 34;
-            @donors = array('Damascus_ari', 'Mazorca', 'Ryualura');
+#           @donors = array('Damascus_ari', 'Mazorca', 'Ryualura');
+            x_new_thread(time(), closure(){
+                @donors = get_value('olympus.donations.donors');
+            });
 
             @progress = floor(@donations / 5);
             @progressbar = array('#','#','#','#','#','#','#','#','#','#');
@@ -48,7 +51,7 @@
                             msg('Usage: /goal add <player>');
                         }
                     case 'clear':
-                        #if(array_size(@args) > 0){
+                        #if(array_size(@args) == 0){
                             x_new_thread(time(), closure(){
                                 @donors = get_value('olympus.donations.donors');
                                 if(@donors != null){ #if something was saved
@@ -58,7 +61,16 @@
                         msg('Queued to clear the list of donors.');
                         #}
                     case 'total':
-
+                        if(array_size(@args) > 1){
+                            x_new_thread(time(), closure(){
+                                if(@args[1] != null || is_numeric(@args[1])){ #
+                                    store_value('olympus.donations.total', @args[1]);
+                                }
+                            });
+                            msg('Queued to set donation amount reached to '.@args[1].'.');
+                        } else{
+                            msg('Usage: /goal add <donation progress>');
+                        }
                     default:
                         msg('/goal Command Usages');
                         msg('Add a donor to the list: /goal add <player>');
