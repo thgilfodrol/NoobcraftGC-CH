@@ -77,7 +77,7 @@
                     default:
                         msg('/goal Command Usages');
                         msg('Add a donor to the list: /goal add <player>');
-                        msg('Remove a donor from the list: /goal clear');
+                        msg('Clear the list of donors: /goal clear');
                         msg('Set the month\'s donation progress: /goal total <$>');
                 }
             } else{
