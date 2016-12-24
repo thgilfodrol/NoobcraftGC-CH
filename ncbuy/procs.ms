@@ -15,3 +15,21 @@ proc _ncbuy_get_perks(){
 
     return(@perks);
 }
+
+proc _ncbuy_get_kits(){
+    @kits = array();
+    @kits['mats'] = array(
+        'description': '16 glowstone, 32 cobblestone, 32 sand, 16 oak logs, 16 coal',
+        'cost': 45);
+    @kits['armor'] = array(
+        'description': 'Chain Armor Set',
+        'cost': 60);
+    @kits['tools'] = array(
+        'description': 'stone sword, stone axe, stone pickaxe, stone shovel',
+        'cost': 15);
+    @kits['fishingtools'] = array(
+        'description': 'weakly enchanted fishing rod, fishing boat, bait',
+        'cost': 50);
+
+    return(@kits);
+}
