@@ -1,0 +1,38 @@
+*:/goal [$] = >>>
+    if(has_permission('nc.title.member')){
+        if($ == null || $ === ''){
+            @donations = 34;
+            @donors = array('Damascus_ari', 'Mazorca', 'Ryualura');
+
+            @progress = floor(@donations / 5);
+            @progressbar = array('#','#','#','#','#','#','#','#','#','#');
+            array_insert(@progressbar, '&8', @progress);
+            if(@donations >= 50){
+                @pcolors = array('&2', '&2', '&2', '&2');
+            } else if(@donations >= 35){
+                @pcolors = array('&2', '&2', '&2', '&8');
+            } else if(@donations >= 25){
+                @pcolors = array('&2', '&2', '&8', '&8');
+            } else if(@donations >= 15){
+                @pcolors = array('&2', '&8', '&8', '&8');
+            } else{
+                @pcolors = array('&8', '&8', '&8', '&8');
+            }
+
+            msg(colorize('&b=-=-= Noobcraft Serverwide Donation Goals =-=-='));
+            msg(colorize('&6Current Progress: &6[&2'.array_implode(@progressbar, '').'&6] ($'.@donations.'&6)'));
+            msg(colorize(@pcolors[0].'> $15: +25% mcMMO EXP Boost'));
+            msg(colorize(@pcolors[1].'> $25: Access to /tpa'));
+            msg(colorize(@pcolors[2].'> $35: Special Gear/Loot Kit'));
+            msg(colorize(@pcolors[3].'> $50: Permanent Extra Sethome'));
+            if(array_size(@donors) > 0){
+                msg(colorize('&6This month\'s perks were graciously contributed by: &2'.array_implode(@donors, '&6, &2')));
+            }
+        } else{
+            @args = parse_args($);
+            msg(@args[0]);
+        }
+    } else{
+        msg(colorize('&cNo permission. Requires at least &bnc.title.member&c.'));
+    }
+<<<
