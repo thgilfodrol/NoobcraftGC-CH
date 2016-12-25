@@ -5,8 +5,8 @@
             msg(colorize('&2*&a=-=-=-=-=-=&7/&8{&6&nNoobCraft Store Manager&r&8}&7\\&a=-=-=-=-=-=&2*'));
             msg(colorize('&6[Store] &aWelcome to the NoobCraft Ingame Currency Store!'));
             msg(colorize('&6[Store] &aYou can buy various ingame items and abilities using ingame currency here.'));
-            msg(colorize('&6[Store] &aTo buy a perk, type &e/ncbuy perk {perkname}'));
-            msg(colorize('&6[Store] &aTo buy a kit, type &e/ncbuy kit {kitname}'));
+            msg(colorize('&6[Store] &aTo view available perks, type &e/ncbuy perk'));
+            msg(colorize('&6[Store] &aTo view available kits, type &e/ncbuy kit'));
         } else{
             @args = parse_args($);
             @numOfArgs = array_size(@args);
@@ -34,7 +34,7 @@
                                 if(acc_balance(@p) >= @perks[@args[1]]['cost']){
                                     acc_subtract(@p, @perks[@args[1]]['cost']);
                                     runas('~console', '/perm player '.@p.' set '.@perks[@args[1]]['permnode']);
-                                    msg(colorize('&6[Store] &5'.@args[1].'&a purchased! New balance: &e$'.acc_balance(@p)));
+                                    msg(colorize('&6[Store] &aPerk &5'.@args[1].'&a purchased! New balance: &e$'.acc_balance(@p)));
                                 } else{ # not enough money! :(
                                     msg(colorize('&6[Store] &cYou do not have enough money to buy &5'.@args[1].'&c.'));
                                 }
@@ -53,7 +53,21 @@
                         }
                         msg(colorize('&6[Store] &aExample usage: &e/ncbuy kit tools'));
                     } else if(@numOfArgs === 2){
-
+                        @kits = _ncbuy_get_kits();
+                        if(array_index_exists(@kits, @args[1])){ # if kit exists
+                            @p = player();
+                            if(acc_balance(@p) >= @kits[@args[1]]['cost']){
+                                acc_subtract(@p, @kits[@args[1]]['cost']);
+                                array_iterate(@kits[@args[1]]['items'], closure(@key, @value){
+                                    pgive_item(@value);
+                                });
+                                msg(colorize('&6[Store] &aKit &5'.@args[1].'&a purchased! New balance: &e$'.acc_balance(@p)));
+                            } else{ # not enough money! :(
+                                msg(colorize('&6[Store] &cYou do not have enough money to buy &5'.@args[1].'&c.'));
+                            }
+                        } else{
+                            msg(colorize('&6[Store] &cNo kit named &5'.@args[1].'&c was found.'));
+                        }
                     }
                 case 'spell':
                     die('not implemented');
