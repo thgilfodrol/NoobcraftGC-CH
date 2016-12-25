@@ -59,7 +59,7 @@
                             if(acc_balance(@p) >= @kits[@args[1]]['cost']){
                                 acc_subtract(@p, @kits[@args[1]]['cost']);
                                 array_iterate(@kits[@args[1]]['items'], closure(@key, @value){
-                                    pgive_item(@value['type'], @value['qty'], @value['meta']);
+                                    pgive_item(@value['type'], @value['qty']);
                                 });
                                 msg(colorize('&6[Store] &aKit &5'.@args[1].'&a purchased! New balance: &e$'.acc_balance(@p)));
                             } else{ # not enough money! :(
