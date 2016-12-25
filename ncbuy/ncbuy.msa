@@ -9,21 +9,54 @@
             msg(colorize('&6[Store] &aTo buy a kit, type &e/ncbuy kit {kitname}'));
         } else{
             @args = parse_args($);
+            @numOfArgs = array_size(@args);
+            @args = array_map(@args, closure(@value){
+                return(to_lower(@value));
+            });
 
-            switch(to_lower(@args[0])){
+            switch(@args[0]){
                 case 'perk':
-                    msg(colorize('&2*&a=-=-=-=-=-=&7/&8{&6&nNoobCraft Store (Perks)&r&8}&7\\&a=-=-=-=-=-=&2*'));
-                    msg(colorize('&6[Store] &aList of available perks and their costs:'));
-                    foreach(@perk:@values in _ncbuy_get_perks()){
-                        msg(colorize('&7>> &5'.@perk.'&a, &e$'.@values['cost'].'&a (usable until next map)'));
-                        msg(colorize('&a'.@values['description']));
+                    if(@numOfArgs === 1){
+                        msg(colorize('&2*&a=-=-=-=-=-=&7/&8{&6&nNoobCraft Store (Perks)&r&8}&7\\&a=-=-=-=-=-=&2*'));
+                        msg(colorize('&6[Store] &aList of available perks and their costs:'));
+                        foreach(@perk:@values in _ncbuy_get_perks()){
+                            msg(colorize('&7>> &5'.@perk.'&a, &e$'.@values['cost'].'&a (usable until next map)'));
+                            msg(colorize('&a'.@values['description']));
+                        }
+                        msg(colorize('&6[Store] &aExample usage: &e/ncbuy perk workbench'));
+                    } else if(@numOfArgs === 2){
+                        @perks = _ncbuy_get_perks();
+                        if(array_index_exists(@perks, @args[1])){ # if perk exists
+                            if(has_permission(@perks[@args[1]]['permnode'])){ # if they have the perk already
+                                msg(colorize('&6[Store] &cYou already own the perk &5'.@args[1]));
+                            } else{
+                                @p = player();
+                                if(acc_balance(@p) >= @perks[@args[1]]['cost']){
+                                    acc_subtract(@p, @perks[@args[1]]['cost']);
+                                    runas('~console', '/perm player '.@p.' set '.@perks[@args[1]]['permnode']);
+                                    msg(colorize('&6[Store] &5'.@args[1].'&a purchased! New balance: &e$'.acc_balance(@p)));
+                                } else{ # not enough money! :(
+                                    msg(colorize('&6[Store] &cYou do not have enough money to buy &5'.@args[1]));
+                                }
+                            }
+                        }
                     }
                 case 'kit':
+                    if(@numOfArgs === 1){
+                        msg(colorize('&2*&a=-=-=-=-=-=&7/&8{&6&nNoobCraft Store (Kits)&r&8}&7\\&a=-=-=-=-=-=&2*'));
+                        msg(colorize('&6[Store] &aList of available kits and their costs:'));
+                        foreach(@kit:@values in _ncbuy_get_kits()){
+                            msg(colorize('&7>> &5'.@kit.'&a, &e$'.@values['cost'].'&a (one time use)'));
+                            msg(colorize('&a'.@values['description']));
+                        }
+                        msg(colorize('&6[Store] &aExample usage: &e/ncbuy kit tools'));
+                    } else if(@numOfArgs === 2){
 
+                    }
                 case 'spell':
                     die('not implemented');
                 default:
-                    msg(colorize('&cUnrecognized subcommand '.@args[0].'. Type /ncbuy for usage help.'));
+                    msg(colorize('&6[Store] &cUnrecognized subcommand '.@args[0].'. Type /ncbuy for usage help.'));
             }
         }
     } else{
