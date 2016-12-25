@@ -28,7 +28,7 @@
                         @perks = _ncbuy_get_perks();
                         if(array_index_exists(@perks, @args[1])){ # if perk exists
                             if(has_permission(@perks[@args[1]]['permnode'])){ # if they have the perk already
-                                msg(colorize('&6[Store] &cYou already own the perk &5'.@args[1]));
+                                msg(colorize('&6[Store] &cYou already own the perk &5'.@args[1].'&c.'));
                             } else{
                                 @p = player();
                                 if(acc_balance(@p) >= @perks[@args[1]]['cost']){
@@ -36,9 +36,11 @@
                                     runas('~console', '/perm player '.@p.' set '.@perks[@args[1]]['permnode']);
                                     msg(colorize('&6[Store] &5'.@args[1].'&a purchased! New balance: &e$'.acc_balance(@p)));
                                 } else{ # not enough money! :(
-                                    msg(colorize('&6[Store] &cYou do not have enough money to buy &5'.@args[1]));
+                                    msg(colorize('&6[Store] &cYou do not have enough money to buy &5'.@args[1].'&c.'));
                                 }
                             }
+                        } else{
+                            msg(colorize('&6[Store] &cNo perk named &5'.@args[1].'&c was found.'));
                         }
                     }
                 case 'kit':
