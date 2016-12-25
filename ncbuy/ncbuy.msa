@@ -1,26 +1,23 @@
 *:/ncbuy2 [$] = >>>
+    include('/home/mcma3ncmain/testservers/ncmainclone_2016-12-15/plugins/CommandHelper/LocalPackages/ncbuy/procs.ms');
     if(has_permission('ncbuy.use')){
         if($ == null || $ == ''){
             msg(colorize('&2*&a=-=-=-=-=-=&7/&8{&6&nNoobCraft Store Manager&r&8}&7\\&a=-=-=-=-=-=&2*'));
-            msg(colorize('&6[Store] &dWelcome to the NoobCraft Ingame Currency Store!'));
-            msg(colorize('&6[Store] &dYou can buy various ingame items and abilities using ingame currency here.'));
-            msg(colorize('&6[Store] &dTo buy a perk, type &e/ncbuy perk {perkname}'));
-            msg(colorize('&6[Store] &dTo buy a kit, type &e/ncbuy kit {kitname}'));
+            msg(colorize('&6[Store] &aWelcome to the NoobCraft Ingame Currency Store!'));
+            msg(colorize('&6[Store] &aYou can buy various ingame items and abilities using ingame currency here.'));
+            msg(colorize('&6[Store] &aTo buy a perk, type &e/ncbuy perk {perkname}'));
+            msg(colorize('&6[Store] &aTo buy a kit, type &e/ncbuy kit {kitname}'));
         } else{
             @args = parse_args($);
-            @perks = array();
-            @perks['enderchest'] = array();
-            @perks['workbench'] = array();
-            @perks['backondeath'] = array();
-            @perks['keepxp'] = array();
 
             switch(to_lower(@args[0])){
                 case 'perk':
                     msg(colorize('&2*&a=-=-=-=-=-=&7/&8{&6&nNoobCraft Store (Perks)&r&8}&7\\&a=-=-=-=-=-=&2*'));
-                    msg(colorize('&6[Store] &dList of available perks and their costs:'));
-                    msg(colorize('&6[Store] &dList of available perks and their costs:'));
-                    msg(colorize('&6[Store] &dList of available perks and their costs:'));
-
+                    msg(colorize('&6[Store] &aList of available perks and their costs:'));
+                    foreach(@perk:@values in _ncbuy_get_perks()){
+                        msg(colorize('&7>> &5'.@perk.'&a, &e$'.@values['cost'].'&a (usable until next map)'));
+                        msg(colorize('&a'.@values['description']));
+                    }
                 case 'kit':
 
                 case 'spell':
