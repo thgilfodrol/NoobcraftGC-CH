@@ -51,8 +51,9 @@ proc _ncbuy_get_kits(){
     @kits['fishingtools'] = array(
         'description': 'Weakly enchanted fishing rod, fishing boat, bait',
         'items': array(
-            array('type': 346, 'qty': 1,
-                'enchants': array(array('etype': 'LUCK', 'elevel': 2), array('etype': 'LURE', 'elevel': 2))),
+            array('type': 346, 'qty': 1, 'meta': array(
+                'enchants': array('etype': 'LUCK', 'elevel': 2), array('etype': 'LURE', 'elevel': 2),
+                'display': 'Trusty Fishing Rod')),
             array('type': 333, 'qty': 1, 'meta': array('display': 'Trusty Canoe')),
             array('type': 297, 'qty': 4, 'meta': array('display': 'Fishing Bait'))),
         'cost': 50);
