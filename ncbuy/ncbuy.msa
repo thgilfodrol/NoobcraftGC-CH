@@ -35,6 +35,15 @@
                                     acc_subtract(@p, @perks[@args[1]]['cost']);
                                     runas('~console', '/perm player '.@p.' set '.@perks[@args[1]]['permnode']);
                                     msg(colorize('&6[Store] &aPerk &5'.@args[1].'&a purchased! New balance: &e$'.acc_balance(@p)));
+                                    x_new_thread(time(), closure(){
+                                        @log = get_value('ncbuy.log');
+                                        if(@log != null){
+                                            @log[] = '- '.@p.' ('.puuid(@p).') bought '.@perks[@args[1]]['permnode'].' at '.time().' for '.@perks[@args[1]]['cost'];
+                                        } else{
+                                            @log = array('- '.@p.' ('.puuid(@p).') bought '.@perks[@args[1]]['permnode'].' at '.time().' for '.@perks[@args[1]]['cost']);
+                                        }
+                                        store_value('ncbuy.log', @log);
+                                    });
                                 } else{ # not enough money! :(
                                     msg(colorize('&6[Store] &cYou do not have enough money to buy &5'.@args[1].'&c.'));
                                 }
@@ -71,6 +80,14 @@
                     }
                 case 'spell':
                     die('not implemented');
+                case 'viewlog':
+                    x_new_thread(time(), closure(){
+                        @log = get_value('ncbuy.log');
+                        msg(colorize('&6[Store] &7Dumping purchase log ('.array_size(@log).' purchases)...'));
+                        foreach(@purchase in @log){
+                            msg(@purchase);
+                        }
+                    });
                 default:
                     msg(colorize('&6[Store] &cUnrecognized subcommand '.@args[0].'. Type /ncbuy for usage help.'));
             }
