@@ -47,7 +47,7 @@ proc _ncbuy_get_kits(){
             array('type': 274, 'qty': 1, 'meta': null),
             array('type': 273, 'qty': 1, 'meta': null),
             array('type': 291, 'qty': 1, 'meta': null)),
-        'cost': 50);
+        'cost': 150);
     @kits['fishingtools'] = array(
         'description': 'Weakly enchanted fishing rod, fishing boat, bait',
         'items': array(
@@ -57,6 +57,12 @@ proc _ncbuy_get_kits(){
             array('type': 333, 'qty': 1, 'meta': array('display': colorize('&r&6Trusty Canoe'))),
             array('type': 297, 'qty': 4, 'meta': array('display': colorize('&r&6Fishing Bait')))),
         'cost': 250);
+    @kits['food'] = array(
+        'description': 'Food to sustain you for a short time',
+        'items': array(
+            array('type': 260, 'qty': 3, 'meta': array('display': colorize('&r&6Apple'))),
+            array('type': 391, 'qty': 2, 'meta': array('display': colorize('&r&6Carrot')))),
+        'cost': 75);
 
     return(@kits);
 }
