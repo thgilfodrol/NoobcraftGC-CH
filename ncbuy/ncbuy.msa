@@ -17,10 +17,13 @@
             switch(@args[0]){
                 case 'perk':
                     if(@numOfArgs === 1){
+                        @owned = '';
+                        @perks = _ncbuy_get_perks();
                         msg(colorize('&2*&a=-=-=-=-=-=&7/&8{&6&nNoobCraft Store (Perks)&r&8}&7\\&a=-=-=-=-=-=&2*'));
                         msg(colorize('&6[Store] &aList of available perks and their costs:'));
-                        foreach(@perk:@values in _ncbuy_get_perks()){
-                            msg(colorize('&7>> &5'.@perk.'&a, &e$'.@values['cost'].'&a (usable until next map)'));
+                        foreach(@perk:@values in @perks){
+                            if(has_permission(@values['permnode'])){    @owned = ' &r&2{owned}';    }
+                            msg(colorize('&7>> &5'.@perk.'&a, &e$'.@values['cost'].'&a (usable until next map)'.@owned));
                             msg(colorize('&a'.@values['description']));
                         }
                         msg(colorize('&6[Store] &aExample usage: &e/ncbuy perk workbench'));
