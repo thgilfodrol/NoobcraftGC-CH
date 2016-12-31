@@ -1,0 +1,41 @@
+*:/cbwinter = >>>
+    if(has_permission('essentials.back')){
+        @p = player();
+        @cooldownkey = @p.'.cbwinter.cd';
+        @lastused = import(@cooldownkey, 0);
+        @cooldown = 30;
+        @duration = 2500; # time in milliseconds
+
+        @coolsdownat = @lastused + @cooldown;
+        @currenttime = time() / 1000;
+        if(@coolsdownat <= @currenttime){ #off cooldown
+            export(@cooldownkey, time() / 1000);
+            @snowcmd = '/execute '.@p.' ~ ~ ~ particle snowshovel ~ ~2 ~ 5 5 5 0.005 100';
+            @titlecmd = '/title '.@p.' title {"text":"Let it snow!","color":"green"}';
+
+            @taskid = set_interval(50, closure(){
+                if(ponline(@p)){
+                    runas('~console', @snowcmd);
+                }
+            });
+
+            set_timeout(@duration, closure(){
+                clear_task(@taskid);
+                if(ponline(@p)){
+                    pgive_item(@p, 332, 16, array('display': colorize('&2S&4n&2o&4w&2b&4a&2l&4l'), 'lore': colorize('&bHoliday snowballs, from the winter celebrations.')));
+                }
+            });
+
+            runas('~console', @titlecmd);
+            broadcast(colorize('&2A gust of wind passes by as '.@p.' reminisces about the winter holiday season.'));
+            # REMOVE THE NEXT (IF STATEMENT) BLOCK AND CONTENTS AFTER JAN 12TH
+            if(!has_permission('thgil.winter')){
+                runas('~console', '/perm player '.@p.' set thgil.winter');
+            }
+        } else{
+            msg(colorize('&9[NCEmotes] &7You must wait '.ceil(@coolsdownat - @currenttime).' more seconds until you can use this emote again.'));
+        }
+    } else{
+        msg(colorize('&9[NCEmotes] &cThis emote can be permanently unlocked every Winter holiday season.'));
+    }
+<<<
