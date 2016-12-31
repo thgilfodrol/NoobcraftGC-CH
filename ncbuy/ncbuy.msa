@@ -25,6 +25,7 @@
                             if(has_permission(@values['permnode'])){    @owned = ' &r&2{owned}';    }
                             msg(colorize('&7>> &5'.@perk.'&a, &e$'.@values['cost'].'&a (usable until next map)'.@owned));
                             msg(colorize('&a'.@values['description']));
+                            @owned = '';
                         }
                         msg(colorize('&6[Store] &aExample usage: &e/ncbuy perk workbench'));
                     } else if(@numOfArgs === 2){
