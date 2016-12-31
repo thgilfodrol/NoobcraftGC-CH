@@ -31,6 +31,7 @@
             # REMOVE THE NEXT (IF STATEMENT) BLOCK AND CONTENTS AFTER JAN 12TH
             if(!has_permission('thgil.winter')){
                 runas('~console', '/perm player '.@p.' set thgil.winter');
+                msg(colorize('&9[NCEmotes] &7You have permanently unlocked the celebrate winter emote!'));
             }
         } else{
             msg(colorize('&9[NCEmotes] &7You must wait '.ceil(@coolsdownat - @currenttime).' more seconds until you can use this emote again.'));
