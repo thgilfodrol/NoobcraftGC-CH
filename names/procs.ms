@@ -1,39 +1,48 @@
+# {c} is a tag substitute for the colour from _nctitle_get_rank_color()
 proc _nctitle_get_titles(){
     @titles = array();
     # default titles
     @titles['adventurer'] = array(
-        'display': 'Adventurer',
+        'display': '[Adventurer]',
         'permnode': null);
     @titles['explorer'] = array(
-        'display': 'Explorer',
+        'display': '[Explorer]',
         'permnode': null);
     @titles['hunter'] = array(
-        'display': 'Hunter',
+        'display': '[Hunter]',
         'permnode': null);
     @titles['noob'] = array(
-        'display': 'Noob',
+        'display': '[Noob]',
         'permnode': null);
     @titles['fighter'] = array(
-        'display': 'Fighter',
+        'display': '[Fighter]',
         'permnode': null);
     @titles['pansy'] = array(
-        'display': 'Pansy',
+        'display': '[Pansy]',
         'permnode': null);
     @titles['gatherer'] = array(
-        'display': 'Gatherer',
+        'display': '[Gatherer]',
         'permnode': null);
     # special titles
     @titles['champion'] = array(
-        'display': 'Champion',
+        'display': '&6[{c}Champion&6]',
         'permnode': 'nc.title.champion');
     @titles['gladiator'] = array(
-        'display': 'Gladiator',
+        'display': '[Gladiator]',
         'permnode': 'nc.title.gladiator');
     @titles['voidwalker'] = array(
-        'display': 'VoidWalker',
+        'display': '&5[&9VoidWalker&5]',
         'permnode': 'nc.title.voidwalker');
 
     return(@titles);
+}
+
+# Returns a string with a title formatted in accordance with the player's rank
+# Does not check if title is valid
+proc _nctitle_format_title(@player, @title){
+    @titledata = _nctitle_get_titles()[@title];
+    @color = _nctitle_get_rank_color(@player);
+    return(@color.replace(@titledata['display'], '{c}', @color).' '.@color);
 }
 
 proc _nctitle_get_rank_color(@player){
