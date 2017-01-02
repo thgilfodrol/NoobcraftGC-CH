@@ -37,6 +37,10 @@ proc _nctitle_get_titles(){
     return(@titles);
 }
 
+proc _nctitle_title_exists(@title){
+    return(array_index_exists(_nctitle_get_titles(), @title));
+}
+
 # Returns a string with a title formatted in accordance with the player's rank
 # Does not check if title is valid
 proc _nctitle_format_title(@player, @title){
