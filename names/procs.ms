@@ -4,38 +4,49 @@ proc _nctitle_get_titles(){
     # default titles
     @titles['adventurer'] = array(
         'display': '[Adventurer]',
+        'special': false,
         'permnode': null);
     @titles['explorer'] = array(
         'display': '[Explorer]',
+        'special': false,
         'permnode': null);
     @titles['hunter'] = array(
         'display': '[Hunter]',
+        'special': false,
         'permnode': null);
     @titles['noob'] = array(
         'display': '[Noob]',
+        'special': false,
         'permnode': null);
     @titles['fighter'] = array(
         'display': '[Fighter]',
+        'special': false,
         'permnode': null);
     @titles['pansy'] = array(
         'display': '[Pansy]',
+        'special': false,
         'permnode': null);
     @titles['gatherer'] = array(
         'display': '[Gatherer]',
+        'special': false,
         'permnode': null);
     # special titles
     @titles['champion'] = array(
         'display': '&6[{c}Champion&6]',
+        'special': true,
         'permnode': 'nc.title.champion');
     @titles['gladiator'] = array(
         'display': '[Gladiator]',
+        'special': true,
         'permnode': 'nc.title.gladiator');
     @titles['voidwalker'] = array(
         'display': '&5[&9VoidWalker&5]',
+        'special': true,
         'permnode': 'nc.title.voidwalker');
 
     return(@titles);
 }
+
 
 proc _nctitle_title_exists(@title){
     return(array_index_exists(_nctitle_get_titles(), @title));
