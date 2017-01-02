@@ -6,6 +6,7 @@
             msg(colorize('&6[Titles] &b/nctitle &flist&7 - display a list of titles.'));
             msg(colorize('&6[Titles] &b/nctitle &fset <title>&7 - set your title to one from the list.'));
             msg(colorize('&6[Titles] &b/nctitle &fremove&7 - remove your current title (aliases: unset, clear, delete).'));
+            msg(colorize('&6[Titles] &b/nctitle &finfo <title>&7 - display information about a title.'));
             msg(colorize('&6[Titles] &b/nctitle &fhelp&7 - show this message.'));
         }
 
@@ -25,7 +26,7 @@
                     @owned = '';
                     @special = '';
 
-                    msg(colorize('&6NC Titles >> Title List'));
+                    msg(colorize('&6NC Titles >>&7 Title List'));
                     foreach(@title:@data in @titles){
                         if(is_null(@data['permnode']) || has_permission(@data['permnode'])){    @owned = ' &2{owned}';    }
                         if(@data['special']){    @special = ' &c{special}'}
@@ -57,6 +58,17 @@
                 case 'clear':
                     runas('~console', '/perm player '.@p.' prefix');
                     msg(colorize('&6[Titles] &7Your title has been cleared.'));
+                case 'info':
+                    @titles = _nctitle_get_titles();
+                    if(@numOfArgs === 2){
+                        if(_nctitle_title_exists(@args[1])){
+                            msg(colorize('&6[Titles] &7The title &b'.@args[1].'&7 '.@titles[@args[1]]['info'].'.'));
+                        } else{
+                            msg(colorize('&6[Titles] &cThe title &b'.@args[1].'&c does not exist.'));
+                        }
+                    } else{
+                        msg(colorize('&6[Titles] &cUsage: &f/nctitle &binfo <title>'));
+                    }
                 default:
                     execute(@helpmenu);
             }
