@@ -21,16 +21,18 @@
 
             switch(@args[0]){
                 case 'list':
-                    msg(colorize('&6NC Titles >> Default List'));
-                    msg(colorize(' &8[&7>&2 [Adventurer]'));
-                    msg(colorize(' &8[&7>&2 [Explorer]'));
-                    msg(colorize(' &8[&7>&2 [Hunter]'));
-                    msg(colorize(' &8[&7>&2 [Noob]'));
-                    msg(colorize(' &8[&7>&2 [Fighter]'));
-                    msg(colorize(' &8[&7>&2 [Pansy]'));
-                    msg(colorize(' &8[&7>&2 [Gatherer]'));
-                case 'special':
-                    msg(colorize('&6NC Titles >> Special List'));
+                    @titles = _nctitle_get_titles();
+                    @owned = '';
+                    @special = '';
+
+                    msg(colorize('&6NC Titles >> Title List'));
+                    foreach(@title:@data in @titles){
+                        if(has_permission(@data['permnode'])){    @owned = ' &2{owned}';    }
+                        if(@data['special']){    @special = ' &c{special}'}
+                        msg(colorize(' &8[&7> '._nctitle_format_title(@p, @title).@special.@owned));
+                        @owned = '';
+                        @special = '';
+                    }
                 case 'set':
 
                 case 'remove':
