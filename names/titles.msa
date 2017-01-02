@@ -1,0 +1,45 @@
+*:/nctitle [$] = >>>
+    if(has_permission('nc.title.list')){
+        @p = player();
+        @helpmenu = closure(){
+            msg(colorize('&6NC Titles >> &7Help Menu'));
+            msg(colorize('&6[Titles] &b/nctitle &flist&7 - display a list of default titles.'));
+            msg(colorize('&6[Titles] &b/nctitle &fspecial&7 - display a list of special titles.'));
+            msg(colorize('&6[Titles] &b/nctitle &fset <title>&7 - set your title to a title from the list.'));
+            msg(colorize('&6[Titles] &b/nctitle &fremove&7 - remove your current title.'));
+            msg(colorize('&6[Titles] &b/nctitle &fhelp&7 - show this message.'));
+        }
+
+        if($ == null || $ === ''){
+            execute(@helpmenu);
+        } else{
+            @args = parse_args($);
+            @numOfArgs = array_size(@args);
+            @args = array_map(@args, closure(@value){
+                return(to_lower(@value));
+            });
+
+            switch(@args[0]){
+                case 'list':
+                    msg(colorize('&6NC Titles >> Default List'));
+                    msg(colorize(' &8[&7>&2 [Adventurer]'));
+                    msg(colorize(' &8[&7>&2 [Explorer]'));
+                    msg(colorize(' &8[&7>&2 [Hunter]'));
+                    msg(colorize(' &8[&7>&2 [Noob]'));
+                    msg(colorize(' &8[&7>&2 [Fighter]'));
+                    msg(colorize(' &8[&7>&2 [Pansy]'));
+                    msg(colorize(' &8[&7>&2 [Gatherer]'));
+                case 'special':
+                    msg(colorize('&6NC Titles >> Special List'));
+                case 'set':
+
+                case 'remove':
+
+                default:
+                    execute(@helpmenu);
+            }
+        }
+    } else{
+        msg(colorize('&6[Titles] &cYou do not have permission to use this command.'));
+    }
+<<<
