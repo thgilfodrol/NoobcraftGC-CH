@@ -3,8 +3,7 @@
         @p = player();
         @helpmenu = closure(){
             msg(colorize('&6NC Titles >> &7Help Menu'));
-            msg(colorize('&6[Titles] &b/nctitle &flist&7 - display a list of default titles.'));
-            msg(colorize('&6[Titles] &b/nctitle &fspecial&7 - display a list of special titles.'));
+            msg(colorize('&6[Titles] &b/nctitle &flist&7 - display a list of titles.'));
             msg(colorize('&6[Titles] &b/nctitle &fset <title>&7 - set your title to a title from the list.'));
             msg(colorize('&6[Titles] &b/nctitle &fremove&7 - remove your current title.'));
             msg(colorize('&6[Titles] &b/nctitle &fhelp&7 - show this message.'));
@@ -13,6 +12,7 @@
         if($ == null || $ === ''){
             execute(@helpmenu);
         } else{
+            include('/home/mcma3ncmain/testservers/ncmainclone_2016-12-15/plugins/CommandHelper/LocalPackages/names/procs.ms');
             @args = parse_args($);
             @numOfArgs = array_size(@args);
             @args = array_map(@args, closure(@value){
@@ -27,14 +27,29 @@
 
                     msg(colorize('&6NC Titles >> Title List'));
                     foreach(@title:@data in @titles){
-                        if(has_permission(@data['permnode'])){    @owned = ' &2{owned}';    }
+                        if(is_null(@data['permnode']) || has_permission(@data['permnode'])){    @owned = ' &2{owned}';    }
                         if(@data['special']){    @special = ' &c{special}'}
                         msg(colorize(' &8[&7> '._nctitle_format_title(@p, @title).@special.@owned));
                         @owned = '';
                         @special = '';
                     }
                 case 'set':
-
+                    @titles = _nctitle_get_titles();
+                    if(@numOfArgs === 2){
+                        if(_nctitle_title_exists(@args[1])){
+                            if(is_null(@titles[@args[1]]['permnode']) || has_permission(@titles[@args[1]]['permnode'])){
+                                @prefix = _nctitle_format_title(@p, @args[1]);
+                                runas('~console', '/perm player '.@p.' prefix '.@prefix);
+                                msg(colorize('&6[Titles] &7Your title has been set to '.substr(@prefix, 0, length(@prefix) - 3).'&7.'));
+                            } else{
+                                msg(colorize('&6[Titles] &cYou have not unlocked this title yet.'));
+                            }
+                        } else{
+                            msg(colorize('&6[Titles] &cThe title &b'.@args[1].'&c does not exist.'));
+                        }
+                    } else{
+                        msg(colorize('&6[Titles] &cUsage: &f/nctitle &bset <title>'));
+                    }
                 case 'remove':
 
                 default:
