@@ -4,8 +4,8 @@
         @helpmenu = closure(){
             msg(colorize('&6NC Titles >> &7Help Menu'));
             msg(colorize('&6[Titles] &b/nctitle &flist&7 - display a list of titles.'));
-            msg(colorize('&6[Titles] &b/nctitle &fset <title>&7 - set your title to a title from the list.'));
-            msg(colorize('&6[Titles] &b/nctitle &fremove&7 - remove your current title.'));
+            msg(colorize('&6[Titles] &b/nctitle &fset <title>&7 - set your title to one from the list.'));
+            msg(colorize('&6[Titles] &b/nctitle &fremove&7 - remove your current title (aliases: unset, clear, delete).'));
             msg(colorize('&6[Titles] &b/nctitle &fhelp&7 - show this message.'));
         }
 
@@ -50,8 +50,13 @@
                     } else{
                         msg(colorize('&6[Titles] &cUsage: &f/nctitle &bset <title>'));
                     }
+                # match any of the next 4 args to clear the title
                 case 'remove':
-
+                case 'unset':
+                case 'delete':
+                case 'clear':
+                    runas('~console', '/perm player '.@p.' prefix');
+                    msg(colorize('&6[Titles] &7Your title has been cleared.'));
                 default:
                     execute(@helpmenu);
             }
