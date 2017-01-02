@@ -5,43 +5,53 @@ proc _nctitle_get_titles(){
     @titles['adventurer'] = array(
         'display': '[Adventurer]',
         'special': false,
+        'info': 'has no special requirements.',
         'permnode': null);
     @titles['explorer'] = array(
         'display': '[Explorer]',
         'special': false,
+        'info': 'has no special requirements.',
         'permnode': null);
     @titles['hunter'] = array(
         'display': '[Hunter]',
         'special': false,
+        'info': 'has no special requirements.',
         'permnode': null);
     @titles['noob'] = array(
         'display': '[Noob]',
         'special': false,
+        'info': 'has no special requirements.',
         'permnode': null);
     @titles['fighter'] = array(
         'display': '[Fighter]',
         'special': false,
+        'info': 'has no special requirements.',
         'permnode': null);
     @titles['pansy'] = array(
         'display': '[Pansy]',
         'special': false,
+        'info': 'has no special requirements.',
         'permnode': null);
     @titles['gatherer'] = array(
         'display': '[Gatherer]',
         'special': false,
+        'info': 'has no special requirements.',
         'permnode': null);
     # special titles
     @titles['champion'] = array(
         'display': '&6[{c}Champion&6]',
         'special': true,
+        'info': 'can be unlocked by winning a Mob Arena match.',
         'permnode': 'nc.title.champion');
     @titles['gladiator'] = array(
         'display': '[Gladiator]',
         'special': true,
+        'info': 'can be unlocked by playing a special Mob Arena match.',
         'permnode': 'nc.title.gladiator');
     @titles['voidwalker'] = array(
         'display': '&5[&9VoidWalker&5]',
         'special': true,
+        'info': 'can be unlocked by winning a special Mob Arena match.',
         'permnode': 'nc.title.voidwalker');
 
     return(@titles);
