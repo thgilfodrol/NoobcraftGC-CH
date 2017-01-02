@@ -53,6 +53,21 @@ proc _nctitle_get_titles(){
         'special': true,
         'info': 'can be unlocked by winning a special Mob Arena match',
         'permnode': 'nc.title.voidwalker');
+    @titles['wraith'] = array(
+        'display': '[Wraith]',
+        'special': true,
+        'info': 'can be unlocked by having 1000 deaths',
+        'permnode': 'nc.title.wraith');
+    @titles['masterofdeath'] = array(
+        'display': '[Master of Death]',
+        'special': true,
+        'info': 'can be unlocked by having 5000 deaths',
+        'permnode': 'nc.title.masterofdeath');
+    @titles['survivalist'] = array(
+        'display': '[Survivalist]',
+        'special': true,
+        'info': 'can be unlocked by registering on our /forums and then having an Admin activate your account',
+        'permnode': 'nc.title.survivalist');
 
     return(@titles);
 }
