@@ -1,10 +1,23 @@
-proc _announcer_get_broadcasts(){
+# Returns an array of the broadcast with the specified index if one is passed in, otherwise return the entire list of broadcasts.
+# Always returns an array. Throws IndexOutOfBoundsException.
+proc _announcer_get_broadcasts([@index]){
     @bd = array();
     # base format: closure containing broadcast or tellraw, followed by weight of broadcast 
     # setting weight of 0 effectively disables the broadcast, setting to 2 makes it twice as likely to be picked than 1
     @bd[] = array(closure(){ broadcast(colorize()); }, 1); 
     @bd[] = array(closure(){ broadcast(colorize('Hello World!')); }, 1);
 
+    # Return the entire array if no index is specified
+    if(@index == null | @index == ''){
+        return(@bd);
+    } else{
+	# Return the broadcast at the specified index if an index was passed in
+	if(array_index_exists(@bd, @index)){
+	    return(array(@bd[@index]));
+	} else{ # index does not exist
+	    throw('IndexOutOfBoundsException', 'IndexOutOfBoundsException');
+	}
+    }
 }
 
 # Returns an array of integers representing the index of a broadcast, quantity dictated by the weight
@@ -22,8 +35,9 @@ proc _announcer_get_expanded_broadcasts(){
 	# Cache the list and return it
 	export('announcer.expandedbroadcastarray', @cachedlist);
 	return(@cachedlist);
-    } else{
-	# The array already exists, so just retrieve it from cache
-	return(@cachedlist);
     }
+    # The array already exists, so just retrieve it from cache
+    return(@cachedlist);    
 }
+
+
