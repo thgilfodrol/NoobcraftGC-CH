@@ -2,13 +2,13 @@
 # Always returns an array. Throws IndexOutOfBoundsException.
 proc _announcer_get_broadcasts([@index]){
     @bd = array();
-    # base format: closure containing broadcast or tellraw, followed by weight of broadcast 
+    # base format: closure containing broadcast or tellraw, then announcement category, followed by weight of broadcast 
     # setting weight of 0 effectively disables the broadcast, setting to 2 makes it twice as likely to be picked than 1
-    @bd[] = array(closure(){ broadcast(colorize()); }, 1); 
-    @bd[] = array(closure(){ broadcast(colorize('Hello World!')); }, 1);
+    @bd[] = array(closure(){ broadcast(colorize()); }, 'tips', 1); 
+    @bd[] = array(closure(){ broadcast(colorize('Hello World!')); }, 'tips', 1);
 
     # Return the entire array if no index is specified
-    if(@index == null | @index == ''){
+    if(@index == null || @index == ''){
         return(@bd);
     } else{
 	# Return the broadcast at the specified index if an index was passed in
@@ -28,7 +28,7 @@ proc _announcer_get_expanded_broadcasts(){
 	@cachedlist = array();
 	@broadcasts = _announcer_get_broadcasts();
 	for(@i = 0, @i < array_size(@broadcasts), @i++){
-	    for(@j = 0, @j < @broadcasts[@i][1], @j++){
+	    for(@j = 0, @j < @broadcasts[@i][2], @j++){
 		@cachedlist[] = @i;
 	    }
 	}
@@ -40,4 +40,8 @@ proc _announcer_get_expanded_broadcasts(){
     return(@cachedlist);    
 }
 
-
+# Honours the weighting of the broadcasts when picking one
+# Returns array containing closure, announcement category, and weight
+proc _announcer_get_random_broadcast(){
+    return(_announcer_get_broadcasts(array_rand(_announcer_get_expanded_broadcasts())));
+}
