@@ -39,11 +39,12 @@ proc _announcer_get_expanded_broadcasts(){
 	return(@cachedlist);
     }
     # The array already exists, so just retrieve it from cache
-    return(@cachedlist);    
+    return(@cachedlist);
 }
 
 # Honours the weighting of the broadcasts when picking one
 # Returns array containing string, announcement category, weight, and if it's a tellraw
 proc _announcer_get_random_broadcast(){
-    return(_announcer_get_broadcasts(array_rand(_announcer_get_expanded_broadcasts())));
+    @broadcasts = _announcer_get_expanded_broadcasts();
+    return(array_rand(@broadcasts)[0]);
 }
