@@ -4,6 +4,7 @@ proc _announcer_get_broadcasts([@index]){
     @bd = array();
     # base format: string containing broadcast or tellraw, then announcement category, weight of broadcast, and if the first element is tellraw
     # setting weight of 0 effectively disables the broadcast, setting to 2 makes it twice as likely to be picked than 1
+    @bd[] = array('{"text":"Sample text here."}', 'tips', 1, true); # sample tellraw broadcast
     @bd[] = array('If you clean your vacuum cleaner, you\'re making your vacuum cleaner, and you\'re a vacuum cleaner.', 'jokes', 1, false); 
     @bd[] = array('Hello World!', 'tips', 1, false);
 
