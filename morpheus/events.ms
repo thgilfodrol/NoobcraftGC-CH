@@ -8,3 +8,13 @@ bind(player_enter_bed, null, null, @event,
         _add_sleeping_player(@event['player'], @event['location']['world']);
     }
 )
+
+# Removes players from list of people in bed
+bind(player_leave_bed, null, null, @event,
+    include('plugins/CommandHelper/LocalPackages/morpheus/procs.ms');
+    @allowedworlds = _get_allowed_worlds();
+
+    if(array_contains(@allowedworlds, @event['location']['world'])){
+	_remove_sleeping_player(@event['player'], @event['location']['world']);
+    }
+)
