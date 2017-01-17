@@ -17,8 +17,6 @@ bind(player_leave_bed, null, null, @event,
     @allowedworlds = _get_allowed_worlds();
 
     if(array_contains(@allowedworlds, @event['location']['world'])){
-	if(_is_valid_player(@event['player'])){
-	    _remove_sleeping_player(@event['player'], @event['location']['world']);
-	}
+	_remove_sleeping_player(@event['player'], @event['location']['world']);
     }
 )
