@@ -34,6 +34,10 @@ proc _remove_sleeping_player(@player, @world){
     export(@key, @asleep);
 }
 
+proc _get_percent_req(){
+    return(0.5);
+}
+
 # Worlds where Morpheus has power
 proc _get_allowed_worlds(){
     return(array('world', 'exploreupdate'));
@@ -42,7 +46,7 @@ proc _get_allowed_worlds(){
 # Evaluates if sufficient players are in bed, and changes it to day if so
 # Returns true if successful
 proc _try_change_to_day(@world){
-    @percentreq = 0.50; # % asleep required to change to day
+    @percentreq = _get_percent_req(); # % asleep required to change to day
     @key = 'morpheus.asleep';
     @asleep = import(@key, null);
 
