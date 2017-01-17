@@ -51,15 +51,31 @@ proc _try_change_to_day(@world){
 	return(false); # so return false
     } else{
 	@allplayers = all_players([@world]);
+	@validplayers = _prune_ignored_players(@allplayers);
 	# If there are enough people sleeping
-	# Shouldn't need to check for div by 0 b/c allplayers is >= asleep[world]
-	if((array_size(@asleep[@world]) / array_size(@allplayers)) >= @percentreq){
+	# Shouldn't need to check for div by 0 b/c validplayers is >= asleep[world]
+	if((array_size(@asleep[@world]) / array_size(@validplayers)) >= @percentreq){
 	    set_world_time(@world, 2000);
-	    foreach(@p in @allplayers){ # tell everyone in the world about the time change
+	    foreach(@p in @validplayers){ # tell everyone in the world about the time change
 		tmsg(@p, colorize('&e[&6Announcer&e] &7A new day is here!'));
 	    }
 	    return(true);
 	}
 	return(false); # not enough in bed
     }
+}
+
+# Remove players that shouldn't be considered in the percentage calculation
+proc _prune_ignored_players(@playerarray){
+    @pruned = array_map(@playerarray, closure(@player){
+	if(_is_valid_player(@player)){ 
+	    return(@player); 
+	}
+    });
+    return(@pruned);
+}
+
+# Return if a player should be considered in the percentage calculation
+proc _is_valid_player(@player){
+    return(!(pisop(@player) || has_permission(@player, 'nc.morpheus.ignore')));
 }
