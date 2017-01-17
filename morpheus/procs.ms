@@ -17,6 +17,23 @@ proc _add_sleeping_player(@player, @world){
     export(@key, @asleep);
 }
 
+proc _remove_sleeping_player(@player, @world){
+    @key = 'morpheus.asleep';
+    @asleep = import(@key, null);
+
+    if(is_null(@asleep)){
+	# nothing in the array, nothing to remove \o/
+	return;
+    } else{ # array is not empty
+	if(array_contains(@asleep[@world], @player)){
+	    array_remove_values(@asleep, @player);
+	}
+    }
+
+    # Export changes
+    export(@key, @asleep);
+}
+
 # Worlds where Morpheus has power
 proc _get_allowed_worlds(){
     return(array('world', 'exploreupdate'));
