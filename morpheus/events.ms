@@ -1,4 +1,4 @@
-# Inspired by the Morpheus forge plugin included in a lot of modpacks
+# Inspired by the Morpheus forge plugin included in a lot of (FTB) modpacks
 # Adds players to list of people in bed
 bind(player_enter_bed, null, null, @event, 
     include('plugins/CommandHelper/LocalPackages/morpheus/procs.ms');
