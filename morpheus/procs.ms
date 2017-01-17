@@ -54,13 +54,13 @@ proc _try_change_to_day(@world){
     if(is_null(@asleep)){
 	return(false); # so return false
     } else{
-	@allplayers = all_players([@world]);
+	@allplayers = all_players(@world);
 	@validplayers = _prune_ignored_players(@allplayers);
 	# If there are enough people sleeping
 	# Shouldn't need to check for div by 0 b/c validplayers is >= asleep[world]
 	if((array_size(@asleep[@world]) / array_size(@validplayers)) >= @percentreq){
 	    set_world_time(@world, 2000);
-	    foreach(@p in @validplayers){ # tell everyone in the world about the time change
+	    foreach(@p in @allplayers){ # tell everyone in the world about the time change
 		tmsg(@p, colorize('&e[&6Announcer&e] &7A new day is here!'));
 	    }
 	    return(true);
