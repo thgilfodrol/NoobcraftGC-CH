@@ -1,5 +1,5 @@
 proc _add_sleeping_player(@player, @world){
-    @key = get_storage_key();
+    @key = _get_storage_key();
     @asleep = import(@key, null);
     
     if(is_null(@asleep)){ # array is null, so let's create it 
