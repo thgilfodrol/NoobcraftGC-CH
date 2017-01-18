@@ -82,9 +82,9 @@ proc _prompt_players(@player, @world, @entered){
     @percentreq = _get_percent_req() * 100;
     @msg = colorize('&e[&6Announcer&e] &7');
     if(@entered){
-	@msg = @msg.@player.color('GRAY').'is now in bed (';
+	@msg = @msg.@player.color('GRAY').' is now in bed (';
     } else{
-	@msg = @msg.@player.color('GRAY').'left their bed (';
+	@msg = @msg.@player.color('GRAY').' left their bed (';
     }
     @msg = @msg.array_size(@asleep).'/'.array_size(@validplayers).'). Need '.@percentreq.'% to transition to day.';
 

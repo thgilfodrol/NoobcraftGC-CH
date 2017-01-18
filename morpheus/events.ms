@@ -6,10 +6,14 @@ bind(player_enter_bed, null, null, @event,
 
     if(array_contains(@allowedworlds, @event['location']['world'])){
 	if(_is_valid_player(@event['player'])){ # if player can trigger time change
-            _add_sleeping_player(@event['player'], @event['location']['world']);
-	    if(!_try_change_to_day(@event['location']['world'])){ # time is unchanged
-		_prompt_players(@event['player'], @event['location']['world'], true);
-	    }
+	    set_timeout(5000, closure(){
+		if(ponline(@event['player'])){
+            	    _add_sleeping_player(@event['player'], @event['location']['world']);
+	    	    if(!_try_change_to_day(@event['location']['world'])){ # time is unchanged
+			_prompt_players(@event['player'], @event['location']['world'], true);
+	    	    }
+		}
+	    });
 	}
     }
 )
