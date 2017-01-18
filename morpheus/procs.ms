@@ -86,9 +86,12 @@ proc _try_change_to_day(@world){
 proc _prompt_players(@player, @world, @entered){
     @allplayers = all_players(@world);
     @validplayers = _prune_ignored_players(@allplayers);
-    @asleep = import(_get_storage_key(), array());
+    @asleep = import(_get_storage_key());
     @percentreq = _get_percent_req() * 100;
     @msg = colorize('&e[&6Announcer&e] &7');
+
+    if(is_null(@asleep)){ return; }
+
     if(@entered){
 	@msg = @msg.@player.color('GRAY').' is now in bed (';
     } else{
