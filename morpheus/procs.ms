@@ -76,7 +76,8 @@ proc _try_change_to_day(@world){
 # Display a message to all players in the world notifying them about players in bed
 # Signature: string:player, string:world, bool:entered
 proc _prompt_players(@player, @world, @entered){
-    @validplayers = _prune_ignored_players(all_players(@world));
+    @allplayers = all_players(@world);
+    @validplayers = _prune_ignored_players(@allplayers);
     @asleep = import(_get_storage_key(), array());
     @percentreq = _get_percent_req() * 100;
     @msg = colorize('&e[&6Announcer&e] &7');
@@ -87,7 +88,9 @@ proc _prompt_players(@player, @world, @entered){
     }
     @msg = @msg.array_size(@asleep).'/'.array_size(@validplayers).'). Need '.@percentreq.'% to transition to day.';
 
-    return(@msg);
+    foreach(@p in @allplayers){
+	tmsg(@p, @msg);
+    }
 }
 
 # Remove players that shouldn't be considered in the percentage calculation
