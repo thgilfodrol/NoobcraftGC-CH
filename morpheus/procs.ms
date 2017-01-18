@@ -73,6 +73,23 @@ proc _try_change_to_day(@world){
     }
 }
 
+# Display a message to all players in the world notifying them about players in bed
+# Signature: string:player, string:world, bool:entered
+proc _prompt_players(@player, @world, @entered){
+    @validplayers = _prune_ignored_players(all_players(@world));
+    @asleep = import(_get_storage_key(), array());
+    @percentreq = _get_percent_req() * 100;
+    @msg = colorize('&e[&6Announcer&e] &7');
+    if(@entered){
+	@msg = @msg.@player.color('GRAY').'is now in bed (';
+    } else{
+	@msg = @msg.@player.color('GRAY').'left their bed (';
+    }
+    @msg = @msg.array_size(@asleep).'/'.array_size(@validplayers).'). Need '.@percentreq.'% to transition to day.';
+
+    return(@msg);
+}
+
 # Remove players that shouldn't be considered in the percentage calculation
 proc _prune_ignored_players(@playerarray){
     @pruned = array_map(@playerarray, closure(@player){
