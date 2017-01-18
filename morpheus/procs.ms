@@ -34,6 +34,13 @@ proc _remove_sleeping_player(@player, @world){
     export(@key, @asleep);
 }
 
+proc _clear_sleeping_players(@world){
+    @key = _get_storage_key();
+    @asleep = import(@key);
+    @asleep[@world] = array();
+    export(@key, @asleep);
+}
+
 proc _get_percent_req(){
     return(0.5);
 }
@@ -64,6 +71,7 @@ proc _try_change_to_day(@world){
 	# Shouldn't need to check for div by 0 b/c validplayers is >= asleep[world]
 	if((array_size(@asleep[@world]) / array_size(@validplayers)) >= @percentreq){
 	    set_world_time(@world, 2000);
+	    _clear_sleeping_players(@world);
 	    foreach(@p in @allplayers){ # tell everyone in the world about the time change
 		tmsg(@p, colorize('&e[&6Announcer&e] &7A new day is here!'));
 	    }
@@ -86,7 +94,7 @@ proc _prompt_players(@player, @world, @entered){
     } else{
 	@msg = @msg.@player.color('GRAY').' left their bed (';
     }
-    @msg = @msg.array_size(@asleep).'/'.array_size(@validplayers).'). Need '.@percentreq.'% to transition to day.';
+    @msg = @msg.array_size(@asleep[@world]).'/'.array_size(@validplayers).'). Need '.@percentreq.'% to transition to day.';
 
     foreach(@p in @allplayers){
 	tmsg(@p, @msg);
