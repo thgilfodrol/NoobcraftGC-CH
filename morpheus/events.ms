@@ -25,6 +25,9 @@ bind(player_leave_bed, null, null, @event,
 
     if(array_contains(@allowedworlds, @event['location']['world'])){
 	_remove_sleeping_player(@event['player'], @event['location']['world']);
-	_prompt_players(@event['player'], @event['location']['world'], true);
+	if(get_world_time(@event['location']['world']) >= 0){ 
+	    # player didn't exit bed because it became daytime
+	    _prompt_players(@event['player'], @event['location']['world'], false);
+	}
     }
 )
