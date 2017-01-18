@@ -23,7 +23,7 @@ proc _remove_sleeping_player(@player, @world){
 
     if(is_null(@asleep)){
 	# nothing in the array, nothing to remove \o/
-	return;
+	return();
     } else{ # array is not empty
 	if(array_contains(@asleep[@world], @player)){
 	    array_remove_values(@asleep, @player);
@@ -90,7 +90,7 @@ proc _prompt_players(@player, @world, @entered){
     @percentreq = _get_percent_req() * 100;
     @msg = colorize('&e[&6Announcer&e] &7');
 
-    if(is_null(@asleep)){ return; }
+    if(is_null(@asleep)){ return(); }
 
     if(@entered){
 	@msg = @msg.@player.color('GRAY').' is now in bed (';
