@@ -3,56 +3,39 @@
     @p = player();
     
     # configs
-    @ptag = '&9[&6NH&9] '; # prefix tag
-    @mcol = '&7'; # message colour
-    @kcol = '&6'; # keyword colour
-    @dateformat = 'yyyy/MM/dd z'; # e.g. 2017/01/29 EDT
+    @config = _get_config();
+    @ptag = @config['ptag']; # prefix tag
+    @mcol = @config['mcol']; # message colour
+    @kcol = @config['kcol']; # keyword colour
+    @dateformat = @config['dateformat']; # e.g. 2017/01/29 EDT
 
     if(has_permission(@p, 'nc.namehistory')){
 	if ($player != ''){
             http_request('https://api.mojang.com/users/profiles/minecraft/'.$player, closure(@response){
-		if (@response[responseCode] == 200){
+		@flags = array();
+		if ($ != ''){
+		    @flags = parse_args($);								
+		}
+
+		if (@response[responseCode] == 200){ # the name was found
 	            @uuid = json_decode(@response[body])[id];
 
-		    http_request('https://api.mojang.com/user/profiles/'.@uuid.'/names', closure(@response){
-			if (@response[responseCode] == 200){
-			    @body = json_decode(@response[body]);
-			    @bodysize = array_size(@body);
-			    @flags = array();
-
-			    if ($ != ''){
-				@flags = parse_args($);								
-			    }
-
-			    if (@bodysize > 1){
-				msg(colorize(@ptag.@mcol.'Found a total of '.@kcol.(@bodysize - 1).@mcol.' name changes for '.@kcol.$player.@mcol.'.'));
-				if (array_contains(@flags, '-u')){
-			            msg(colorize(@ptag.@mcol.'UUID: '.@kcol.@uuid));
-				}
-
-				msg(colorize(@ptag.@mcol.'Original Username: '.@kcol.@body[0][name]));
-				if (@bodysize > 2){
-				    msg(colorize(@ptag.@mcol.'Previous Username(s): '));
-				    for(@i = 1, @i < @bodysize - 1, @i++){
-					msg(colorize(@ptag.@mcol.'-> '.@kcol.@body[@i][name].@mcol.', changed at '.@kcol.simple_date(@dateformat, @body[@i][changedToAt])));
-				    }
-				}
-
-				msg(colorize(@ptag.@mcol.'Current Username: '));
-				msg(colorize(@ptag.@mcol.'-> '.@kcol.@body[@bodysize - 1][name].@mcol.', changed at '.@kcol.simple_date(@dateformat, @body[@bodysize - 1][changedToAt])));
-			    } else{
-				msg(colorize(@ptag.@kcol.@body[0][name].@mcol.' has never changed their name.'));
-				if (array_contains(@flags, '-u')){
-				    msg(colorize(@ptag.@mcol.'UUID: '.@kcol.@uuid));
-				}
-			    }							
-			} else{
-			    msg(colorize(@ptag.@mcol.'Error: Mojang\'s API servers returned '.@kcol.@response[responseCode].' '.@response[responseText].@mcol.'.'));
-			}					
-		    });
+		    _print_name_history(@uuid, @flags);
 		} else{
-		    if (@response[responseCode] == 204){
-			msg(colorize(@ptag.@mcol.'No player currently named '.@kcol.$player.@mcol.' was found.'));
+		    if (@response[responseCode] == 204){ # user likely changed their name
+			http_request('https://api.mojang.com/users/profiles/minecraft/'.$player.'?at=0', closure(@response){
+			    if (@response[responseCode] == 200){ # user changed their name
+				@uuid = json_decode(@response[body])[id];
+				msg(colorize(@ptag.@mcol.'The player\'s name has since changed.'));
+				_print_name_history(@uuid, @flags);
+			    } else{
+				if (@response[responseCode] == 204){ # name still isn't found
+				    die(colorize(@ptag.@mcol.'No player named '.@kcol.$player.@mcol.' was found.'));				    
+				} else{
+				    msg(colorize(@ptag.@mcol.'Error: Mojang\'s API servers returned '.@kcol.@response[responseCode].' '.@response[responseText].@mcol.'.'));
+				}
+			    }
+			});
 		    } else{
 			msg(colorize(@ptag.@mcol.'Error: Mojang\'s API servers returned '.@kcol.@response[responseCode].' '.@response[responseText].@mcol.'.'));
 		    }
