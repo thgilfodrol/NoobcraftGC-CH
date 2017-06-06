@@ -40,7 +40,7 @@ register_command('ncemote', array(
                             @pagenumber = @args[1];
                         }
 
-                        if(!is_integral(@pagenumber) && @pagenumber < 0){ # page number is not int or is negative
+                        if(!is_integral(@pagenumber) || @pagenumber <= 0){ # page number is not int or is negative
                             msg(colorize('&cPage number must be a non-zero positive integer.'));
                             msg(colorize('&6Correct usage: &b/ncemote &flist [page]&7 - display a list of emotes.'));
                             return(true);
@@ -58,6 +58,9 @@ register_command('ncemote', array(
                     msg(colorize('&6NC Emotes >> &7Emote List (Page '.@pagenumber.'/'.(ceil(@numberofemotes / @entriesperpage)).')'));
                     for(@i = @pagenumber * @entriesperpage - @entriesperpage, @i < @pagenumber * @entriesperpage && @i < @numberofemotes, @i++){
                         msg(colorize(' &8[&7>&a '.@emotes[@i]));
+                    }
+                    if(@pagenumber < ceil(@numberofemotes / @entriesperpage)){ # more pages exist
+                        msg(colorize('&7You can view the next page with &b/ncemote &flist '.@pagenumber.'&7.'));
                     }
 
                     return(true);
