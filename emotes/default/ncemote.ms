@@ -1,3 +1,5 @@
+include('/home/mcma3ncmain/testservers/ncmainclone_2016-12-15/plugins/CommandHelper/LocalPackages/emotes/default/procs.ms');
+
 # helper command for nc emote system
 register_command('ncemote', array(
     'description': 'Helper command for the Noobcraft emote system',
@@ -32,13 +34,42 @@ register_command('ncemote', array(
 
             switch(@args[0]){
                 case 'list':
+                    @pagenumber = 1;
+                    if(array_size(@args) < 3){ # no more than 2 arguments
+                        if(array_size(@args) == 2){ # page number is given
+                            @pagenumber = @args[1];
+                        }
+
+                        if(!is_integral(@pagenumber) && @pagenumber < 0){ # page number is not int or is negative
+                            msg(colorize('&cPage number must be a non-zero positive integer.'));
+                            msg(colorize('&6Correct usage: &b/ncemote &flist [page]&7 - display a list of emotes.'));
+                            return(true);
+                        }
+                    } else{ # too many arguments
+                        msg(colorize('&cInvalid number of arguments.'));
+                        msg(colorize('&6Correct usage: &b/ncemote &flist [page]&7 - display a list of emotes.'));
+                        return(true);
+                    }
+
+                    @entriesperpage = 10;
+                    @emotes = array_keys(_ncemotes_get_emotes());
+                    @numberofemotes = array_size(@emotes);
+
+                    msg(colorize('&6NC Emotes >> &7Emote List (Page '.@pagenumber.'/'.(ceil(@numberofemotes / @entriesperpage)).')'));
+                    for(@i = @pagenumber * @entriesperpage - @entriesperpage, @i < @pagenumber * @entriesperpage && @i < @numberofemotes, @i++){
+                        msg(colorize(' &8[&7>&a '.@emotes[@i]));
+                    }
+
                     return(true);
                 case 'info':
                     return(true);
                 case 'help':
+                    execute(@helpmenu);
                     return(true);
                 default:
-                    return(false);
+                    msg(colorize('&cInvalid arguments.'));
+                    execute(@helpmenu);
+                    return(true);
             }
         }
     }
