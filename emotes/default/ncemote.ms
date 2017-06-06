@@ -15,6 +15,31 @@ register_command('ncemote', array(
     },
     'aliases': array('ncemotes', 'emotes', 'emote'),
     'executor': closure(@alias, @sender, @args){
+        @helpmenu = closure(){
+            msg(colorize('&6NC Emotes >> &7Help Menu'));
+            msg(colorize('&b/ncemote &flist [page]&7 - display a list of emotes.'));
+            msg(colorize('&b/ncemote &finfo <emote>&7 - display information about an emote.'));
+            msg(colorize('&b/ncemote &fhelp&7 - show this message.'));
+        }
 
+        if(array_size(@args) == 0){
+            execute(@helpmenu);
+            return(true);
+        } else{
+            @args = array_map(@args, closure(@value){
+                return(to_lower(@value));
+            });
+
+            switch(@args[0]){
+                case 'list':
+                    return(true);
+                case 'info':
+                    return(true);
+                case 'help':
+                    return(true);
+                default:
+                    return(false);
+            }
+        }
     }
 ));
