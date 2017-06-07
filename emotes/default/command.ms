@@ -4,7 +4,7 @@ include('/home/mcma3ncmain/testservers/ncmainclone_2016-12-15/plugins/CommandHel
 # iterate over list of emotes to register each as an actual command using metadata
 foreach(@emote:@metadata in @emotes){ # @emote is the name/command of emote
     @requiredperm = 'nc.emotes.default'; # default permission node for all emotes if no perm is specified
-    if(array_index_exists(@metadata['permnode'])){
+    if(array_index_exists(@metadata, 'permnode')){
         if(@metadata['permnode'] == ''){
             @requiredperm = 'nc.emotes.default'; # default permission node for all emotes if no perm is specified
         } else{
