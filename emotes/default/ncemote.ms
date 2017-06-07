@@ -60,7 +60,7 @@ register_command('ncemote', array(
                         msg(colorize(' &8[&7>&a '.@emotes[@i]));
                     }
                     if(@pagenumber < ceil(@numberofemotes / @entriesperpage)){ # more pages exist
-                        msg(colorize('&7You can view the next page with &b/ncemote &flist '.@pagenumber.'&7.'));
+                        msg(colorize('&7You can view the next page with &b/ncemote &flist '.(@pagenumber + 1).'&7.'));
                     }
 
                     return(true);
