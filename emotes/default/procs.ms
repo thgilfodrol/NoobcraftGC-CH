@@ -4,6 +4,13 @@ proc _ncemotes_get_emotes(){
 #    @emotes[''] = array(
 #       'permnode': '', # if no permnode key exists or if perm is empty (recommended), user requires default permnode nc.emotes.standard
 #       'format': '');
+
+    # Complex emote example
+    @emotes['smell'] = array(
+        'format': closure(@player, @args){
+            broadcast(colorize('&a'.@player.' smells.'));
+        });
+
     @emotes['annoyed'] = array(
         'format': 'is annoyed');
     @emotes['bark'] = array(
