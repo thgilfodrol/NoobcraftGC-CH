@@ -38,12 +38,20 @@ foreach(@emote:@metadata in @emotes){ # @emote is the name/command of emote
                 export(@cooldownkey, time() / 1000);
 
                 @details = array_implode(@args);
+
                 if(length(@details) != 0){
                     # pad details with a leading space, if they exist (fixes issue that caused issues with mycmd impl)
                     @details = ' '.@details;
                 }
 
-                broadcast(colorize('&a'.@sender.' '.@metadata['format'].@details.'.'));
+                if(is_string(@metadata['format'])){
+                    broadcast(colorize('&a'.@sender.' '.@metadata['format'].@details.'.'));
+                } else if(is_closure(@metadata['format'])){
+                    execute(@sender, @args, @metadata['format']);
+                } else{ # config issue- format is neither string nor closure
+                    msg(colorize('&4An internal error has occurred when running this command.'));
+                    msg(colorize('&cPlease tell a staff member what command brought up this message.'));
+                }
             } else{
                 msg(colorize('&cYou must wait '.ceil(@resettime - @currenttime).' more seconds until you can use an emote again.'));
             }
