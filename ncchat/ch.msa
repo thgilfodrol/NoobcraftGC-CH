@@ -1,0 +1,41 @@
+*:/ch [$] = >>>
+    include('/home/mcma3ncmain/.ampdata/instances/NCMain2/Minecraft/plugins/CommandHelper/LocalPackages/chat/procs.ms');
+    if(has_permission('herochat.emote')){
+        if($){
+#die(colorize('&4not fully coded yet'));
+            @args = parse_args(to_lower($));
+            @channels = _ncchat_get_channels();
+            @channelnames = array_map(array_keys(@channels), closure(@channelname){ # change channel names to lowercase
+                return(to_lower(@channelname));
+            });
+
+            foreach(@chan:@data in @channels){ # replace channel nick with channel full name
+                if(to_lower(@data['nick']) == @args[0]){
+                    @args[0] = to_lower(@chan);
+                }
+            }
+
+            @p = player();
+
+# TODO: implement _ncchat_get_channel_full_name(), e.g. returns Global given g or global and null if invalid channel
+
+            if(array_contains(@channelnames, @args[0])){
+                @channel = @args[0];
+#die(to_upper(@channel[0]));
+                @channel = concat(to_upper(@channel[0]), @channel[1..]);
+                if(_ncchat_player_can_speak_in(@p, @channel)){
+                    _ncchat_player_set_channel(@p, @channel);
+                    msg(colorize('&eNow talking in &f'.@channel.'&e.'));
+                } else{
+                    msg(colorize('&cYou do not have permission to speak in &f'.@channel.'&c.'));
+                }
+            } else{
+                msg(colorize('&cInvalid arguments.'));
+            }
+        } else{
+            msg(colorize('Usage: /ch [channel] &7- to change channels'));
+        }
+    } else{
+        msg(colorize('&cNo permissions.'));
+    }
+<<<
