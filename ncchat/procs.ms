@@ -10,6 +10,11 @@ proc _ncchat_get_channels(){
         'nick': 'S',
         'perm': 'herochat.speak.staff',
         'default': true); # if players are subscribed automatically
+    @channels['Local'] = associative_array(
+        'color': '&e', # default text color
+        'nick': 'L',
+        'perm': 'herochat.speak.local',
+        'default': true); # if players are subscribed automatically
 
     return(@channels);
 }
@@ -37,6 +42,11 @@ proc _ncchat_format(@player, @pchannel){
     } else if(@pchannel == 'Staff'){
         @col = @channels['Staff']['color'];
         @nick = @channels['Staff']['nick'];
+
+        return(colorize(@col.'{&2S'.@col.'} ['.@nick.'] &f'.@prefix.'%1$s'.@suffix.@col.': %2$s'));
+    } else if(@pchannel == 'Local'){
+        @col = @channels['Local']['color'];
+        @nick = @channels['Local']['nick'];
 
         return(colorize(@col.'{&2S'.@col.'} ['.@nick.'] &f'.@prefix.'%1$s'.@suffix.@col.': %2$s'));
     }
