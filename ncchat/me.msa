@@ -1,0 +1,10 @@
+*:/me $ = >>>
+    include('/home/mcma3ncmain/.ampdata/instances/NCMain2/Minecraft/plugins/CommandHelper/LocalPackages/chat/procs.ms');
+    if(has_permission('herochat.emote')){
+        @p = player();
+        @channel = _ncchat_player_get_channel(@p);
+        broadcast(_ncchat_format_emote(@p, @channel, $));
+    } else{
+        msg(colorize('&cNo permissions.'));
+    }
+<<<
