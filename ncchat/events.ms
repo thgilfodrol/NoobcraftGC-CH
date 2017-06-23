@@ -19,6 +19,22 @@ bind('player_chat', null, null, @event,
         });
         modify_event('recipients', @recipients);
         modify_event('format', @chat);
+    } else if(@pchannel == 'Local'){
+        @sploc = ploc(@event['player']); # sender player location
+        @recipients = array_map(@event['recipients'], closure(@recipient){
+            @rploc = ploc(@recipient); # recipient player location
+
+            if(@sploc['world'] == @rploc['world']){ # same world
+                @distance = sqrt(pow((@sploc['x'] - @rploc['x']), 2) + pow((@sploc['z'] - @rploc['z']), 2));
+                if(@distance <= 200){ # in range
+                    return(@recipient);
+                }
+            }
+            return();
+        });
+
+        modify_event('recipients', @recipients);
+        modify_event('format', _ncchat_format(@event['player'], @pchannel));
     }
 )
 
