@@ -2,9 +2,11 @@
     include('/home/mcma3ncmain/.ampdata/instances/NCMain2/Minecraft/plugins/CommandHelper/LocalPackages/chat/procs.ms');
     if(has_permission('herochat.speak.global')){
         if($){
-            @args = parse_args(to_lower($));
+            @args = parse_args($);
+            @args[0] = to_lower(@args[0]);
             @channelfullname = _ncchat_get_channel_full_name(@args[0]);
             @p = player();
+            @numargs = array_size(@args);
 
             if(!is_null(@channelfullname)){
                 if(_ncchat_player_can_speak_in(@p, @channelfullname)){
@@ -13,11 +15,38 @@
                 } else{
                     msg(colorize('&cYou do not have permission to speak in &f'.@channelfullname.'&c.'));
                 }
+            } else if(@args[0] == 'qm'){
+                if(@numargs >= 2){
+                    if(@numargs == 2){ die(colorize('&cChat message cannot be blank.')); }
+
+                    @channelfullname = _ncchat_get_channel_full_name(to_lower(@args[1]));
+
+                    if(!is_null(@channelfullname)){
+                        if(_ncchat_player_can_speak_in(@p, @channelfullname)){
+                            @currentchannel = _ncchat_player_get_channel(@p);
+                            _ncchat_player_set_channel(@p, @channelfullname);
+
+                            @channelcolor = _ncchat_get_channels()[@channelfullname]['color'];
+                            chat(colorize(@channelcolor).array_implode(@args[2..]));
+
+                            _ncchat_player_set_channel(@p, @currentchannel);
+                        } else{
+                            msg(colorize('&cYou do not have permission to speak in &f'.@channelfullname.'&c.'));
+                        }
+                    } else{
+                        msg(colorize('&cInvalid channel name or nickname: ').@args[1]);
+                    }
+                } else{
+                    msg(colorize('&cInvalid number of arguments.'));
+                    msg(colorize('Usage: /ch qm <channel name/channel nick>'));
+                }
             } else{
                 msg(colorize('&cInvalid arguments.'));
             }
         } else{
-            msg(colorize('Usage: /ch [channel] &7- to change channels'));
+            msg(colorize('&eNCChat Usage:'));
+            msg(colorize('/ch <channel name/channel nick> &7- to change channels'));
+            msg(colorize('/ch qm <channel name/channel nick> &7- quick message a channel'));
         }
     } else{
         msg(colorize('&cNo permissions.'));
