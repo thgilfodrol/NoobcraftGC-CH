@@ -14,7 +14,7 @@ proc _announcer_get_broadcasts(@index){
     } else{
         # Return the broadcast at the specified index if an index was passed in
         if(array_index_exists(@bd, @index)){
-            return(array(@bd[@index]));
+            return(@bd[@index]);
         } else{ # index does not exist
             throw('IndexOutOfBoundsException', 'IndexOutOfBoundsException');
         }
