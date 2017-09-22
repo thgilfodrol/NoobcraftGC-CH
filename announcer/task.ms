@@ -1,6 +1,6 @@
 # Broadcast every 10 minutes, starting 5 seconds after registration
 set_interval(600*1000, 5000, closure(){
-    include('/plugins/CommandHelper/LocalPackages/announcer/procs.ms'); 
+    include('procs.ms'); 
     @broadcast = _announcer_get_random_broadcast();
     # array of players who ignored categories of announcements
     @playerignores = import('announcer.ignores', array()); 
