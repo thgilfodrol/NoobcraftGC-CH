@@ -1,6 +1,6 @@
 # Returns an array of the broadcast with the specified index if one is passed in, otherwise return the entire list of broadcasts.
 # Always returns an array. Throws IndexOutOfBoundsException.
-proc _announcer_get_broadcasts([@index]){
+proc _announcer_get_broadcasts(@index){
     @bd = array();
     # base format: string containing broadcast or tellraw, then announcement category, weight of broadcast, and if the first element is tellraw
     # setting weight of 0 effectively disables the broadcast, setting to 2 makes it twice as likely to be picked than 1
