@@ -81,6 +81,8 @@ proc _ncemotes_get_emotes(){
         'format': 'shouts Ni');
     @emotes['nod'] = array(
         'format': 'nods');
+    @emotes['oof'] = array(
+        'format': 'oofs');
     @emotes['pace'] = array(
         'format': 'paces');
     @emotes['palmdeskface'] = array(
@@ -124,7 +126,20 @@ proc _ncemotes_get_emotes(){
     @emotes['sneeze'] = array(
         'format': 'sneezes');
     @emotes['snicker'] = array(
-        'format': 'snickers');
+        'format': closure(@player, @args){
+            broadcast(colorize('&a').@player.' snickers'.(array_implode(@args)).'.');
+
+	    set_timeout(1000, closure(){
+	        @rand = rand(10);
+		if(@rand == 1){
+		    broadcast(colorize('&aAnnouncer marco polos.'));
+		} else if(@rand == 2){
+		    broadcast(colorize('&aAnnouncer kitkats.'));
+		} else if(@rand == 3){
+		    broadcast(colorize('&aAnnouncer mars.'));
+		}
+	    });
+        });
     @emotes['stand'] = array(
         'format': 'stands');
     @emotes['stare'] = array(
