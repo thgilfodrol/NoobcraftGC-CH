@@ -42,7 +42,7 @@ proc _ncchat_json_format(@player, @pchannel, @pchat){
 
     @lastknownname = _ncchat_last_known_name(@player);
     if(@lastknownname == @player){
-        @namehistorytip = concat(colorize('&b'), @player, ' &fhas never changed their name.');
+        @namehistorytip = concat(colorize('&b'), @player, colorize(' &fhas never changed their name.'));
     } else{
         @namehistorytip = concat(colorize('Last known as &b'), @lastknownname);
     }
