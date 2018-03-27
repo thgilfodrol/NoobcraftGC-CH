@@ -168,3 +168,21 @@ proc _ncchat_last_known_name(@player){
 
     return(@name);
 }
+
+# Sets minimal mode for @player
+# Returns the value minimal mode was changed to
+proc _ncchat_player_set_minimal_mode(@player, @value){
+    @key = concat('ncchat.minimal.', @player);
+
+    export(@key, @value);
+    return(@value);
+}
+
+# Gets minimal mode setting for @player
+# Returns the setting they have for minimal mode
+proc _ncchat_player_get_minimal_mode(@player){
+    @key = concat('ncchat.minimal.', @player);
+    @value = import(@key, false);
+
+    return(@value);
+}
