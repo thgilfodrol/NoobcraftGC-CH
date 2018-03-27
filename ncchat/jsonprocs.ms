@@ -78,7 +78,21 @@ proc _ncchat_json_format(@player, @pchannel, @pchat, @minimal){
     );
 
     # name formatting
-    if(!(@minimal)){ # not formatting in minimal mode
+    if(!@minimal){ # formatting in minimal mode
+        # name
+        @body[] = associative_array(
+            'text': colorize(concat(_nctitle_get_rank_color(@player), @player)),
+            'hoverEvent': associative_array(
+                'action': 'show_text',
+                # prefix, name, suffix hovertext
+                'value': colorize(concat(@prefix, @player, @suffix, '\n', @namehistorytip)),
+            ),
+            'clickEvent': associative_array(
+                'action': 'suggest_command',
+                'value': concat('/msg ', @player, ' '),
+            ),
+        );
+    } else{ # not formatting in minimal mode
         # prefix, name, suffix
         @body[] = associative_array('text': colorize(@prefix));
         @body[] = associative_array(
@@ -93,20 +107,6 @@ proc _ncchat_json_format(@player, @pchannel, @pchat, @minimal){
             ),
         );
         @body[] = associative_array('text': colorize(@suffix));
-    } else{
-        # name
-        @body[] = associative_array(
-            'text': colorize(concat(_nctitle_get_rank_color(@player), @player)),
-            'hoverEvent': associative_array(
-                'action': 'show_text',
-                # prefix, name, suffix hovertext
-                'value': colorize(concat(@prefix, @player, @suffix, '\n', @namehistorytip)),
-            ),
-            'clickEvent': associative_array(
-                'action': 'suggest_command',
-                'value': concat('/msg ', @player, ' '),
-            ),
-        );
     }
 
     # message body
