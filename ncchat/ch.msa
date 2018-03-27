@@ -51,8 +51,15 @@
                 }
             } else if(@args[0] == 'minimal'){
                 if(@numargs == 2){
-                    if(@args[1] == 'true' || @args[1] == 'false'){
-                        @mode = _ncchat_player_set_minimal_mode(@p, @args[1]);
+                    # MUST NOT accept player's input directly
+                    # player input is string, data is stored as string and not bool
+                    # this results in eval to true because non-empty strings are always true
+                    # (and me tearing hair out for 5 hours)
+                    if(@args[1] == 'true'){
+                        @mode = _ncchat_player_set_minimal_mode(@p, true);
+                        msg(concat(colorize('&eYou have set minimal mode to &f'), @mode, colorize('&e.')));
+                    } else if(@args[1] == 'false'){
+                        @mode = _ncchat_player_set_minimal_mode(@p, false);
                         msg(concat(colorize('&eYou have set minimal mode to &f'), @mode, colorize('&e.')));
                     } else{
                         msg(concat(colorize('&eInvalid option &f'), @args[1], colorize('&e (must be either &ftrue&e or &ffalse&e).')));
