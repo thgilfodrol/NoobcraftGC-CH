@@ -11,7 +11,7 @@ proc _ncchat_tellraw(@target, @args){
     }
 
     if(@args == ''){
-	    throw('NotFoundException',
+            throw('NotFoundException',
             'The text JSON array cannot be empty.'
         )
     }
@@ -28,9 +28,10 @@ proc _ncchat_json_format(@player, @pchannel, @pchat){
     @prefix = vault_user_prefix(pworld(@player), @player);
     @suffix = vault_user_suffix(pworld(@player), @player);
 
+
     # Given channel @pchannel does not exist
     if(!array_index_exists(@channels, @pchannel)){
-        throw('NotFoundException', 
+        throw('NotFoundException',
             concat('The channel \"', @pchannel, '" does not exist.')
         );
     }
@@ -39,13 +40,26 @@ proc _ncchat_json_format(@player, @pchannel, @pchat){
 
     @body = array();
 
+    @lastknownname = _ncchat_last_known_name(@player);
+    if(@lastknownname == @player){
+        @namehistorytip = colorize('&bThis player has never changed their name.');
+    } else{
+        @namehistorytip = concat(colorize('&bLast known as '), @lastknownname);
+    }
+
     # server and channel tag
     @body[] = associative_array('text': colorize('&7{&2S&7} '));
     @body[] = associative_array('text': concat(color(@chatcolor), '[', @channels[@pchannel]['nick'], '] '));
 
     # name
     @body[] = associative_array('text': colorize(@prefix));
-    @body[] = associative_array('text': colorize(concat(_nctitle_get_rank_color(@player), @player)));
+    @body[] = associative_array(
+        'text': colorize(concat(_nctitle_get_rank_color(@player), @player)),
+        'hoverEvent': associative_array(
+            'action': 'show_text',
+            'value': @namehistorytip,
+        );
+    );
     @body[] = associative_array('text': colorize(@suffix));
 
     # message body
@@ -88,16 +102,6 @@ proc _ncchat_mc_to_json_color(@mc){
             concat('The given color/formatting code,', @mc, ', is not a recognized code.')
         );
     }
-}
-
-# Given a json colour, return the corresponding minecraft colour code
-proc _ncchat_json_to_mc_color(@json){
-    throw('Exception', 'This is not yet implemented.');
-}
-
-# Given a json colour, return the corresponding minecraft colour code
-proc _ncchat_json_to_mc_color(@json){
-    throw('Exception', 'This is not yet implemented.');
 }
 
 # Given a json colour, return the corresponding minecraft colour code
