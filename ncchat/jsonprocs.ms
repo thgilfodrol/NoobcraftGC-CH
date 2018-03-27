@@ -95,9 +95,25 @@ proc _ncchat_json_to_mc_color(@json){
     throw('Exception', 'This is not yet implemented.');
 }
 
+# Given a json colour, return the corresponding minecraft colour code
+proc _ncchat_json_to_mc_color(@json){
+    throw('Exception', 'This is not yet implemented.');
+}
+
+# Given a json colour, return the corresponding minecraft colour code
+proc _ncchat_json_to_mc_color(@json){
+    throw('Exception', 'This is not yet implemented.');
+}
+
 # Returns the player's last known name from memory (if stored), otherwise falls back to plast_known_name()
 proc _ncchat_last_known_name(@player){
-    @name = import(concat('ncchat.lastknownname.', @player), plast_known_name(@player));
+    @key = concat('ncchat.lastknownname.', @player);
+    @name = import(@key, null);
+
+    if(@name == null){
+        @name = plast_known_name(@player);
+        export(@key, @name);
+    }
 
     return(@name);
 }
