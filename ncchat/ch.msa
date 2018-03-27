@@ -59,3 +59,8 @@
         msg(colorize('&cNo permissions.'));
     }
 <<<
+
+*:/chtest $ = >>>
+    include('/home/mcma3ncmain/.ampdata/instances/NCMain2/Minecraft/plugins/CommandHelper/LocalPackages/chat/procs.ms');
+    msg(_ncchat_get_channel_full_name($));
+<<<
