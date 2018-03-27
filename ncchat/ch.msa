@@ -1,7 +1,7 @@
 *:/ch [$] = >>>
     include('procs.ms');
     include('jsonprocs.ms');
-    
+
     if(has_permission('herochat.speak.global')){
         if($){
             @args = parse_args($);
@@ -52,12 +52,14 @@
             } else if(@args[0] == 'minimal'){
                 if(@numargs == 2){
                     if(@args[1] == 'true' || @args[1] == 'false'){
-                        msg(concat(colorize('&eServer chat minimal mode has been set to &f'), _ncchat_player_set_minimal_mode(@p), colorize('&e.')));
+                        @mode = _ncchat_player_set_minimal_mode(@p, @args[1]);
+                        msg(concat(colorize('&eYou have set minimal mode to &f'), @mode, colorize('&e.')));
                     } else{
-                        msg(concat(colorize('&eInvalid option '), @args[1], colorize('&e (must be either &ftrue&e or &ffalse&e).')));
+                        msg(concat(colorize('&eInvalid option &f'), @args[1], colorize('&e (must be either &ftrue&e or &ffalse&e).')));
                     }
                 } else{
-                    msg(concat(colorize('&eMinimal mode is currently set to '), _ncchat_player_get_minimal_mode(@p), colorize('&e.')));
+                    @mode = _ncchat_player_get_minimal_mode(@p);
+                    msg(concat(colorize('&eMinimal mode is currently set to &f'), @mode, colorize('&e.')));
                 }
             } else{
                 msg(colorize('&cInvalid arguments.'));
