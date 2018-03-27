@@ -63,6 +63,8 @@ proc _ncchat_json_format(@player, @pchannel, @pchat, @minimal){
         @namehistorytip = concat(colorize('Last known as &b'), @lastknownname);
     }
 
+    @displayname = display_name(@player);
+
     # server and channel tag
     @body[] = associative_array('text': colorize('&7{&2S&7} '));
     @body[] = associative_array(
@@ -81,11 +83,11 @@ proc _ncchat_json_format(@player, @pchannel, @pchat, @minimal){
     if(@minimal){ # formatting in minimal mode
         # name
         @body[] = associative_array(
-            'text': colorize(concat(_nctitle_get_rank_color(@player), display_name(@player))),
+            'text': colorize(concat(_nctitle_get_rank_color(@player), @displayname)),
             'hoverEvent': associative_array(
                 'action': 'show_text',
                 # prefix, name, suffix hovertext
-                'value': colorize(concat(@prefix, @player, @suffix, '\n', @namehistorytip)),
+                'value': colorize(concat(@prefix, @displayname, @suffix, '\n', @namehistorytip)),
             ),
             'clickEvent': associative_array(
                 'action': 'suggest_command',
@@ -96,7 +98,7 @@ proc _ncchat_json_format(@player, @pchannel, @pchat, @minimal){
         # prefix, name, suffix
         @body[] = associative_array('text': colorize(@prefix));
         @body[] = associative_array(
-            'text': colorize(concat(_nctitle_get_rank_color(@player), display_name(@player))),
+            'text': colorize(concat(_nctitle_get_rank_color(@player), @displayname)),
             'hoverEvent': associative_array(
                 'action': 'show_text',
                 'value': @namehistorytip,
