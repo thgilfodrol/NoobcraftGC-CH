@@ -19,6 +19,21 @@ proc _ncchat_tellraw(@target, @args){
     runas('~console', sconcat('/tellraw', @target, @args));
 }
 
+# Send a tellraw message @args to each player in array @targetarray
+# @target: list of players, no default
+# @args: json formatted string, no default
+proc _ncchat_tellraw_list(@players, @args){
+    if(@args == ''){
+        throw('NotFoundException',
+            'The text JSON array cannot be empty.'
+        )
+    }
+
+    foreach(@player in @players){
+        runas('~console', sconcat('/tellraw', @player, @args));
+    }
+}
+
 # Given the player @player, a channel @pchannel, and their message @pchat,
 # returns a tellraw compatible json array
 # @player: the player's name
