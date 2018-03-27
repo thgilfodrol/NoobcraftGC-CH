@@ -8,27 +8,34 @@
             @p = player();
             @numargs = array_size(@args);
 
+            # Check if the player entered a channel name for the second argument
             if(!is_null(@channelfullname)){
                 if(_ncchat_player_can_speak_in(@p, @channelfullname)){
+                    # Set the player's active channel
                     _ncchat_player_set_channel(@p, @channelfullname);
                     msg(colorize('&eNow talking in &f'.@channelfullname.'&e.'));
                 } else{
                     msg(colorize('&cYou do not have permission to speak in &f'.@channelfullname.'&c.'));
                 }
-            } else if(@args[0] == 'qm'){
+            } else if(@args[0] == 'qm'){ # the player wants to send a quick message to given channel
                 if(@numargs >= 2){
+                    # Check if the player has only entered "/ch qm <channel>", and no message
                     if(@numargs == 2){ die(colorize('&cChat message cannot be blank.')); }
 
                     @channelfullname = _ncchat_get_channel_full_name(to_lower(@args[1]));
 
+                    # Make sure the channel name exists
                     if(!is_null(@channelfullname)){
                         if(_ncchat_player_can_speak_in(@p, @channelfullname)){
+                            # Set their channel to what they want the next message to be in
                             @currentchannel = _ncchat_player_get_channel(@p);
                             _ncchat_player_set_channel(@p, @channelfullname);
 
                             @channelcolor = _ncchat_get_channels()[@channelfullname]['color'];
+                            # Send a message in the requested channel
                             chat(colorize(@channelcolor).array_implode(@args[2..]));
 
+                            # Set their active channel back to what they had before
                             _ncchat_player_set_channel(@p, @currentchannel);
                         } else{
                             msg(colorize('&cYou do not have permission to speak in &f'.@channelfullname.'&c.'));
@@ -51,9 +58,4 @@
     } else{
         msg(colorize('&cNo permissions.'));
     }
-<<<
-
-*:/chtest $ = >>>
-    include('/home/mcma3ncmain/.ampdata/instances/NCMain2/Minecraft/plugins/CommandHelper/LocalPackages/chat/procs.ms');
-    msg(_ncchat_get_channel_full_name($));
 <<<
