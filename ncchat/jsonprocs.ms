@@ -38,11 +38,12 @@ proc _ncchat_tellraw_list(@players, @args){
 # returns a tellraw compatible json array
 # @player: the player's name
 # @pchannel: the player's channel
-proc _ncchat_json_format(@player, @pchannel, @pchat){
+# @pchat: the player's chat message
+# @minimal: whether or not to format in minimal mode
+proc _ncchat_json_format(@player, @pchannel, @pchat, @minimal){
     @channels = _ncchat_get_channels();
     @prefix = vault_user_prefix(pworld(@player), @player);
     @suffix = vault_user_suffix(pworld(@player), @player);
-
 
     # Given channel @pchannel does not exist
     if(!array_index_exists(@channels, @pchannel)){
@@ -76,20 +77,37 @@ proc _ncchat_json_format(@player, @pchannel, @pchat){
         ),
     );
 
-    # name
-    @body[] = associative_array('text': colorize(@prefix));
-    @body[] = associative_array(
-        'text': colorize(concat(_nctitle_get_rank_color(@player), @player)),
-        'hoverEvent': associative_array(
-            'action': 'show_text',
-            'value': @namehistorytip,
-        ),
-        'clickEvent': associative_array(
-            'action': 'suggest_command',
-            'value': concat('/msg ', @player, ' '),
-        ),
-    );
-    @body[] = associative_array('text': colorize(@suffix));
+    # name formatting
+    if(!(@minimal)){ # not formatting in minimal mode
+        # prefix, name, suffix
+        @body[] = associative_array('text': colorize(@prefix));
+        @body[] = associative_array(
+            'text': colorize(concat(_nctitle_get_rank_color(@player), @player)),
+            'hoverEvent': associative_array(
+                'action': 'show_text',
+                'value': @namehistorytip,
+            ),
+            'clickEvent': associative_array(
+                'action': 'suggest_command',
+                'value': concat('/msg ', @player, ' '),
+            ),
+        );
+        @body[] = associative_array('text': colorize(@suffix));
+    } else{
+        # name
+        @body[] = associative_array(
+            'text': colorize(concat(_nctitle_get_rank_color(@player), @player)),
+            'hoverEvent': associative_array(
+                'action': 'show_text',
+                # prefix, name, suffix hovertext
+                'value': concat(colorize(@prefix, @player, @suffix), '\n', @namehistorytip),
+            ),
+            'clickEvent': associative_array(
+                'action': 'suggest_command',
+                'value': concat('/msg ', @player, ' '),
+            ),
+        );
+    }
 
     # message body
     # remember to sanitize @pchat!
