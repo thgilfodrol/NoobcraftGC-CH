@@ -50,15 +50,15 @@ proc _ncchat_json_format(@player, @pchannel, @pchat){
     # server and channel tag
     @body[] = associative_array('text': colorize('&7{&2S&7} '));
     @body[] = associative_array(
-        'text': concat(color(@chatcolor), '[', @channels[@pchannel]['nick'], '] ')
+        'text': concat(color(@chatcolor), '[', @channels[@pchannel]['nick'], '] '),
         'hoverEvent': associative_array(
             'action': 'show_text',
             'value': @pchannel,
-        );
+        ),
         'clickEvent': associative_array(
             'action': 'suggest_command',
             'value': '/g ',
-        );
+        ),
     );
 
     # name
@@ -68,12 +68,13 @@ proc _ncchat_json_format(@player, @pchannel, @pchat){
         'hoverEvent': associative_array(
             'action': 'show_text',
             'value': @namehistorytip,
-        );
+        ),
         'clickEvent': associative_array(
             'action': 'suggest_command',
             'value': concat('/msg ', @player),
-        );
+        ),
     );
+    @body[] = associative_array('text': colorize(@suffix));
 
     # message body
     # remember to sanitize @pchat!
