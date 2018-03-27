@@ -81,7 +81,7 @@ proc _ncchat_json_format(@player, @pchannel, @pchat, @minimal){
     if(@minimal){ # formatting in minimal mode
         # name
         @body[] = associative_array(
-            'text': colorize(concat(_nctitle_get_rank_color(@player), @player)),
+            'text': colorize(concat(_nctitle_get_rank_color(@player), display_name(@player))),
             'hoverEvent': associative_array(
                 'action': 'show_text',
                 # prefix, name, suffix hovertext
@@ -96,7 +96,7 @@ proc _ncchat_json_format(@player, @pchannel, @pchat, @minimal){
         # prefix, name, suffix
         @body[] = associative_array('text': colorize(@prefix));
         @body[] = associative_array(
-            'text': colorize(concat(_nctitle_get_rank_color(@player), @player)),
+            'text': colorize(concat(_nctitle_get_rank_color(@player), display_name(@player))),
             'hoverEvent': associative_array(
                 'action': 'show_text',
                 'value': @namehistorytip,
