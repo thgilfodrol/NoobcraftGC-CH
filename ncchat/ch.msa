@@ -47,6 +47,8 @@
                     msg(colorize('&cInvalid number of arguments.'));
                     msg(colorize('Usage: /ch qm <channel name/channel nick>'));
                 }
+            } else if(@args[0] == 'minimal'){
+                msg(concat(colorize('&eServer chat minimal mode has been set to &f'), _ncchat_player_set_minimal_mode(@p), colorize('&e.')));
             } else{
                 msg(colorize('&cInvalid arguments.'));
             }
@@ -54,6 +56,7 @@
             msg(colorize('&eNCChat Usage:'));
             msg(colorize('/ch <channel name/channel nick> &7- to change channels'));
             msg(colorize('/ch qm <channel name/channel nick> &7- quick message a channel'));
+            msg(colorize('/ch minimal &7- toggle minimal mode for yourself'));
         }
     } else{
         msg(colorize('&cNo permissions.'));
