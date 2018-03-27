@@ -1,5 +1,7 @@
 *:/ch [$] = >>>
     include('procs.ms');
+    include('jsonprocs.ms');
+    
     if(has_permission('herochat.speak.global')){
         if($){
             @args = parse_args($);
