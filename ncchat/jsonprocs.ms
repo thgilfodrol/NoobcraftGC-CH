@@ -42,9 +42,9 @@ proc _ncchat_json_format(@player, @pchannel, @pchat){
 
     @lastknownname = _ncchat_last_known_name(@player);
     if(@lastknownname == @player){
-        @namehistorytip = colorize('&bThis player has never changed their name.');
+        @namehistorytip = concat(colorize('&b'), @player, ' &fhas never changed their name.');
     } else{
-        @namehistorytip = concat(colorize('&bLast known as '), @lastknownname);
+        @namehistorytip = concat(colorize('Last known as &b'), @lastknownname);
     }
 
     # server and channel tag
