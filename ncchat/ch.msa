@@ -66,7 +66,7 @@
             msg(colorize('/ch qm <channel name/channel nick> &7- quick message a channel'));
             msg(colorize(concat(
                 '/ch minimal <true|false> &7- set minimal mode for yourself',
-                'Minimal mode moves each player's prefix and suffix into a tooltip over their name.',
+                'Minimal mode moves each player\'s prefix and suffix into a tooltip over their name.',
             )));
         }
     } else{
