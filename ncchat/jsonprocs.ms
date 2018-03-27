@@ -186,3 +186,26 @@ proc _ncchat_player_get_minimal_mode(@player){
 
     return(@value);
 }
+
+# Sets the player's NCC nickname
+proc _ncchat_player_set_nickname(@player, @nickname){
+    @key = concat('ncchat.nicknames.', @player);
+    # Store in cache
+    export(@key, @nickname);
+    # Write to persistence
+    x_new_thread(time(), closure(){
+        store_value(@key, @nickname);
+    });
+
+    return();
+}
+
+# Given player name @player, returns their NCC nickname
+# If there was no cached nickname found, return player name @player
+proc _ncchat_player_get_nickname(@player){
+    @key = concat('ncchat.nicknames.', @player);
+    # Retrieve from cache
+    @value = import(@key, @player);
+
+    return(@value);
+}
