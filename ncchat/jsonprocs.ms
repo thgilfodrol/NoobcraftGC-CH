@@ -78,7 +78,7 @@ proc _ncchat_json_format(@player, @pchannel, @pchat, @minimal){
     );
 
     # name formatting
-    if(!@minimal){ # formatting in minimal mode
+    if(@minimal){ # formatting in minimal mode
         # name
         @body[] = associative_array(
             'text': colorize(concat(_nctitle_get_rank_color(@player), @player)),
