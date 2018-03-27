@@ -71,7 +71,7 @@ proc _ncchat_json_format(@player, @pchannel, @pchat){
         ),
         'clickEvent': associative_array(
             'action': 'suggest_command',
-            'value': concat('/msg ', @player),
+            'value': concat('/msg ', @player, ' '),
         ),
     );
     @body[] = associative_array('text': colorize(@suffix));
