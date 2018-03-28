@@ -124,12 +124,66 @@ proc _ncchat_json_format(@player, @pchannel, @pchat, @minimal){
 # Given a player's chat message, process it to properly display URLs
 # Returns json array of text components
 proc _ncchat_process_chat(@pchat){
+    # source: https://code.tutsplus.com/tutorials/8-regular-expressions-you-should-know--net-6149
+    @urlpattern = '(https?:\\/\\/?([\\da-z\\.-]+)\\.([a-z\\.]{2,6})([\\/\\w \\.-]*)*\\/?)';
+    # source: https://stackoverflow.com/a/3809435
+    @urlpattern3 = '(http(s)?:\\/\\/.)?(www\\.)?[-a-zA-Z0-9@:%._\\+~#=]{2,256}\\.[a-z]{2,6}\\b([-a-zA-Z0-9@:%_\\+.~#?&\\/\\/=]*)';
+
     @processed = array();
 
-    @processed[] = associative_array('text': @pchat);
+    @matches = reg_match_all(@urlpattern3, @pchat);
 
+    # No urls in given chat
+    if(array_size(@matches) === 0){
+        # Send the chat back unprocessed; nothing to be done here
+        @processed[] = associative_array('text': @pchat);
+        return(@processed);
+    }
 
-    return(@processed);
+    # Collect matched urls into an array
+    @urls = array();
+    array_iterate(@matches, closure(@key, @value){
+        # Match found
+        if(array_size(@value) !== 0){
+            # Add to url array
+            @urls[] = @value[0]
+        }
+    });
+
+    @components = array();
+    # Split text on urls so we have the text that was between each url
+    @text = reg_split(@urlpattern3, @pchat);
+
+    # Size of @urls should always be 1 less than @text
+    @numurls = array_size(@urls);
+    @numtext = array_size(@text);
+
+    # Reconstruct chat
+    for(@i = 0, @i < (@numtext - 1), @i++){
+        # Shorten url size if over 36 chars long
+        if(length(@urls[@i]) > 36){
+            # Display a 24 char preview
+            @urltext = concat(substr(@urls[@i], 0, 24), '...');
+        } else{
+            @urltext = @urls[@i]; # just display the original url
+        }
+
+        @components[] = associative_array('text': @text[@i]);
+        @components[] = associative_array(
+            'text': concat(color('AQUA'), @urltext),
+            'clickEvent': associative_array(
+                'action': 'open_url',
+                'value': concat(color('AQUA'), @urls[@i]),
+            ),
+            'hoverEvent': associative_array(
+                'action': 'show_text',
+                'value': concat(color('AQUA'), @urls[@i]),
+            ),
+        );
+    }
+    @components[] = associative_array('text': @text[@numtext - 1]); # append final text chunk
+
+    return(@components);
 }
 
 # Given a minecraft colour code, return the corresponding json colour
