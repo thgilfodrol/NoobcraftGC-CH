@@ -111,11 +111,25 @@ proc _ncchat_json_format(@player, @pchannel, @pchat, @minimal){
         @body[] = associative_array('text': colorize(@suffix));
     }
 
+    # Process @pchat (e.g. render urls)
+    @processed = _ncchat_process_chat(@pchat);
+
     # message body
     # remember to sanitize @pchat!
-    @body[] = associative_array('text': concat(': ', @pchat), 'color': @chatcolor);
+    @body[] = associative_array('text': ': ', 'color': @chatcolor, 'extra': @processed);
 
     return(json_encode(@body));
+}
+
+# Given a player's chat message, process it to properly display URLs
+# Returns json array of text components
+proc _ncchat_process_chat(@pchat){
+    @processed = array();
+
+    @processed[] = associative_array('text': @pchat);
+
+
+    return(@processed);
 }
 
 # Given a minecraft colour code, return the corresponding json colour
