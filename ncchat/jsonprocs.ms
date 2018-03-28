@@ -173,7 +173,7 @@ proc _ncchat_process_chat(@pchat){
             'text': concat(color('AQUA'), @urltext),
             'clickEvent': associative_array(
                 'action': 'open_url',
-                'value': concat(color('AQUA'), @urls[@i]),
+                'value': @urls[@i],
             ),
             'hoverEvent': associative_array(
                 'action': 'show_text',
