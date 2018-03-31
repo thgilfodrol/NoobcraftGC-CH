@@ -68,6 +68,11 @@ proc _nctitle_get_titles(){
         'special': true,
         'info': 'can be unlocked by registering on our /forums and then having an Admin activate your account',
         'permnode': 'nc.title.survivalist');
+    @titles['theeggceptional'] = array(
+        'display': '[The Eggceptional]',
+        'special': true,
+        'info': 'can be unlocked by finding a lucky egg during an Easter Egg Hunt.',
+        'permnode': 'nc.title.theeggceptional');
 
     return(@titles);
 }
