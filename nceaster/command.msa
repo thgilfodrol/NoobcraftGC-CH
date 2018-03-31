@@ -19,7 +19,7 @@
                     if(array_size(@args) === 4){
                         if(is_integral(@args[1]) && is_integral(@args[2]) && is_integral(@args[3])){
                             @egglocs = import('easter.egglocs', array());
-                            array_push(@egglocs, array(@args[1], @args[2], @args[3]));
+                            array_push(@egglocs, array(integer(@args[1]), integer(@args[2]), integer(@args[3])));
                             export('easter.egglocs', @egglocs);
                             msg(colorize('&8[&aEaster&8]&a Set new egg location at ('.@args[1].' '.@args[2].' '.@args[3].')&a.'));
                         } else{
