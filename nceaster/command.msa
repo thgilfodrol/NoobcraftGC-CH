@@ -1,0 +1,89 @@
+*:/nceaster [$] = >>>
+    if(has_permission('nc.easter.admin')){
+        if($ == ''){
+            msg(colorize('&8[&aEaster&8] &aThis is the Noobcraft Easter event management system.'));
+            msg(colorize('&aUse &b/nceaster help&a for command usage.'));
+        } else{
+            @args = parse_args($);
+            switch(to_lower(@args[0])){
+                case 'help':
+                    msg(colorize('&8[&aEaster&8] &eAvailable subcommands:'));
+                    msg(colorize('&b/nceaster set <x> <y> <z> &e- Set an Easter egg.'));
+                    msg(colorize('&b/nceaster unset <index> &e- Unset an Easter egg at <index> in &b/nceaster list&e.'));
+                    msg(colorize('&b/nceaster list &e- List egg locations.'));
+                    msg(colorize(
+                        '&b/nceaster reload <egglocs|loot> [true|false]&e- Reload the stored locations of eggs or the loot table, respectively.'.
+                        '&eSpecify true at the end to overwrite the previous data (defaults to false).'
+                    ));
+                case 'set':
+                    if(array_size(@args) === 4){
+                        if(is_integral(@args[1]) && is_integral(@args[2]) && is_integral(@args[3])){
+                            @egglocs = import('easter.egglocs', array());
+                            array_push(@egglocs, array(@args[1], @args[2], @args[3]));
+                            export('easter.egglocs', @egglocs);
+                            msg(colorize('&8[&aEaster&8]&a Set new egg location at ('.@args[1].' '.@args[2].' '.@args[3].')&a.'));
+                        } else{
+                            msg(colorize('&8[&aEaster&8]&c Coordinates entered are not valid numbers.'));
+                        }
+                    } else{
+                        msg(colorize('&8[&aEaster&8]&c Missing arguments: expected 4, found '.array_size(@args).'.'));
+                    }
+                case 'unset':
+                    if(array_size(@args) === 2){
+                        if(is_integral(@args[1])){
+                            @egglocs = import('easter.egglocs', array());
+                            if(@args[1] <= array_size(@egglocs)){
+                                msg(colorize('&8[&aEaster&8]&a Removed egg at '.array_remove(@egglocs, @args[1]).' indexed '.@args[1].'.'));
+                            } else{
+                                msg(colorize('&8[&aEaster&8]&c Egg at index '.@args[1].' in list does not exist.'));
+                            }
+                        } else{
+                            msg(colorize('&8[&aEaster&8]&c Index entered is not a valid number.'));
+                        }
+                    } else{
+                        msg(colorize('&8[&aEaster&8]&c Missing arguments: expected 2, found '.array_size(@args).'.'));
+                    }
+                case 'list':
+                    @egglocs = import('easter.egglocs', array());
+                    if(array_size(@egglocs) === 0){
+                        msg(colorize('&8[&aEaster&8] &aThere are no egg locations set.'));
+                    } else{
+                        msg(colorize('&8[&aEaster&8] &aEgg locations currently set:'));
+                        for(@i = 0, @i < array_size(@egglocs), @i++){
+                            msg(colorize(concat('&a', @i, '&7: &e', @egglocs[@i][0], ' ', @egglocs[@i][1], ' ', @egglocs[@i][2])));
+                        }
+                    }
+                case 'reload':
+                    if(array_size(@args) >= 2){
+                        if(@args[1] == 'egglocs'){
+                            @egglocs = import('easter.egglocs', array());
+                            @newlocs = json_decode(read('data/egglocs.json'));
+
+                            if(array_size(@args) === 3 && @args[2] == 'true'){ # overwrite the data
+                                @final = @newlocs;
+                            } else{
+                                @final = array_merge(@egglocs, @newlocs);
+                            }
+
+                            export('easter.egglocs', @final);
+
+                            msg(colorize('&8[&aEaster&8] &aAdded the following egg locations: '));
+                            foreach(@newloc in @newlocs){
+                                msg(concat(colorize('&e'), array_implode(@newloc)));
+                            }
+                        } else if(@args[1] == 'loot'){
+                            die(colorize('&8[&aEaster&8]&c Not implemented yet.'));
+                        } else{
+                            msg(colorize('&8[&aEaster&8]&c Missing arguments: expected 2, found '.array_size(@args).'.'));
+                        }
+                    } else{
+                        msg(colorize('&8[&aEaster&8]&c Missing arguments: expected 2, found '.array_size(@args).'.'));
+                    }
+                default:
+                    msg(colorize('&8[&aEaster&8] &cInvalid subcommand. Type &b/nceaster help&c for help.'));
+            }
+        }
+    } else{
+        msg(colorize('&8[&aEaster&8] &cYou do not have permission to use this command.'));
+    }
+<<<
