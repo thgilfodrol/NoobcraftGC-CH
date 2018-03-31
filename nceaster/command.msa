@@ -10,7 +10,7 @@
                     msg(colorize('&8[&aEaster&8] &eAvailable subcommands:'));
                     msg(colorize('&b/nceaster set <x> <y> <z> &e- Set an Easter egg.'));
                     msg(colorize('&b/nceaster unset <index> &e- Unset an Easter egg at <index> in &b/nceaster list&e.'));
-                    msg(colorize('&b/nceaster list &e- List egg locations.'));
+                    msg(colorize('&b/nceaster list [dump] &e- List egg locations. "dump" option prints the raw json data.'));
                     msg(colorize(
                         '&b/nceaster reload <egglocs|loot> [true|false]&e- Reload the stored locations of eggs or the loot table, respectively.'.
                         '&eSpecify true at the end to overwrite the previous data (defaults to false).'
@@ -51,6 +51,10 @@
                         msg(colorize('&8[&aEaster&8] &aEgg locations currently set:'));
                         for(@i = 0, @i < array_size(@egglocs), @i++){
                             msg(colorize(concat('&a', @i, '&7: &e', @egglocs[@i][0], ' ', @egglocs[@i][1], ' ', @egglocs[@i][2])));
+                        }
+
+                        if(array_size(@args) === 2 && @args[1] == 'dump'){
+                            msg(json_encode(@egglocs));
                         }
                     }
                 case 'reload':
