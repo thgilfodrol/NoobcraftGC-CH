@@ -37,7 +37,6 @@ bind('block_break', array('priority': 'monitor'), null, @event,
             # stop tracking the block, as we assume player was successful in mining it
             array_remove_values(@tracked, @eventblock);
             export(@storagekey, @tracked); # update tracked block list
-broadcast('Took '.subtract(@start, time()).'ms');
             # exit
             return();
         }
@@ -60,23 +59,25 @@ broadcast('Took '.subtract(@start, time()).'ms');
             }
 
             @counter += 1;
-        } while(@counter < 10 && @newadditions != 0);
+        } while(@counter < 4 && @newadditions != 0);
 
         @tracked = array_merge(@tracked, @matches); # push new matched blocks to tracked block list
         array_remove_values(@tracked, @eventblock); # stop tracking the block the player just broke
         export(@storagekey, @tracked); # update tracked block list
 
         @quantity = string(array_size(@matches));
-        if(@counter == 10){ # max loop count was reached
+        if(@counter == 4){ # max loop count was reached
             # there may be more ores we didn't record
             @quantity .= '+';
         }
         @ore = @ores[string(@event['block']['type'])];
-        broadcast(concat(colorize('&c[!] '.@ore['color']), @event['player'], ' found ', @quantity, ' ', @ore['name'], ' ore.'), 'herochat.speak.staff');
+        @ploc = array_normalize(ploc(@event['player']))[0..3];
+        @ploc[1] += 1; # why the hell is ploc returning a block below the player
+        broadcast(concat(colorize('&c[!] '.@ore['color']), @event['player'], ' found ', @quantity, ' ', @ore['name'], ' ore (light: ', get_light_at(@ploc), ').'), 'herochat.speak.staff');
 
 #           broadcast((colorize('&c[!] ').@event['player'].' mined '.@ore.'.'), 'herochat.speak.staff');
 
-broadcast('Took '.subtract(time(), @start).'ms');
+#broadcast('Took '.subtract(time(), @start).'ms');
         }
 )
 
