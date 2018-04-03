@@ -40,6 +40,10 @@ proc _ncanticheat_get_ores(){
             'name': 'iron',
             'color': '&7',
         ),
+        '14': associative_array(
+            'name': 'gold',
+            'color': '&e',
+        ),
     );
 
     return(@ores);
