@@ -1,22 +1,5 @@
 include('procs.ms');
 bind('block_break', array('priority': 'monitor'), null, @event,
-    @ores = associative_array(
-        '129': associative_array(
-            'name': 'emerald',
-            'color': '&a',
-        ),
-        '56': associative_array(
-            'name': 'diamond',
-            'color': '&b',
-        ),
-        '15': associative_array(
-            'name': 'iron',
-            'color': '&7',
-        ),
-    );
-
-@start = time();
-
     @ores = _ncanticheat_get_ores();
 
     # player is in survival, and the block broken is an ore that we track
