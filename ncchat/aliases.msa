@@ -1,0 +1,20 @@
+*:/s [$] = >>>
+    if(has_permission('herochat.speak.global')){
+    call_alias('/ch qm s '.($));
+    } else{
+    msg(colorize('&4No perms.'));
+    }
+<<<
+
+*:/g [$] = >>>
+    if(has_permission('herochat.speak.global')){
+    call_alias('/ch qm g '.($));
+    } else{
+    msg(colorize('&4No perms.'));
+    }
+<<<
+
+# mycmd seems to already have an alias for this (ID123)
+#*:/l [$] = >>>
+#    call_alias('/ch qm l '.$);
+#<<<
