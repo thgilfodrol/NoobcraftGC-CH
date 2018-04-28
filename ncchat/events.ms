@@ -12,12 +12,12 @@ bind('player_chat', array('priority': 'high'), null, @event,
         #_ncchat_tellraw('@a', json_encode(array(array('text': '{'), array('text': @event['player']), array('text': '} '.@event['message']))));
 
         @allplayers = all_players();
-        @expanded = _ncchat_json_format(@event['player'], @pchannel, @event['message'], false);
-        @minimal = _ncchat_json_format(@event['player'], @pchannel, @event['message'], true);
+        @chatformat = _ncchat_json_format(@event['player'], @pchannel, @event['message']);
+        @expanded = @chatformat['expanded'];
+        @minimal = @chatformat['minimal'];
 
         foreach(@player in @allplayers){
             @minmode = _ncchat_player_get_minimal_mode(@player);
-            broadcast("Typeof minmode is: " . typeof(@minmode) . "; value is: " . @minmode);
             if(!@minmode){
                 _ncchat_tellraw(@player, @expanded);
             } else{
