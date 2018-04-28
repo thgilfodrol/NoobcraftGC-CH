@@ -35,7 +35,7 @@
 
                             @channelcolor = _ncchat_get_channels()[@channelfullname]['color'];
                             # Send a message in the requested channel
-                            chat(colorize(@channelcolor).array_implode(@args[2..]));
+                            chat(array_implode(@args[2..]));
 
                             # Set their active channel back to what they had before
                             _ncchat_player_set_channel(@p, @currentchannel);
