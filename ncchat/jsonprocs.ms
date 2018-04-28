@@ -35,12 +35,11 @@ proc _ncchat_tellraw_list(@players, @args){
 }
 
 # Given the player @player, a channel @pchannel, and their message @pchat,
-# returns a tellraw compatible json array
+# returns associative array of tellraw compatible json arrays, named 'expanded' and 'minimal'
 # @player: the player's name
 # @pchannel: the player's channel
 # @pchat: the player's chat message
-# @minimal: whether or not to format in minimal mode
-proc _ncchat_json_format(@player, @pchannel, @pchat, @minimal){
+proc _ncchat_json_format(@player, @pchannel, @pchat){
     @channels = _ncchat_get_channels();
     @prefix = vault_user_prefix(pworld(@player), @player);
     @suffix = vault_user_suffix(pworld(@player), @player);
@@ -54,8 +53,6 @@ proc _ncchat_json_format(@player, @pchannel, @pchat, @minimal){
 
     @chatcolor = _ncchat_mc_to_json_color(@channels[@pchannel]['color']);
 
-    @body = array();
-
     @lastknownname = _ncchat_last_known_name(@player);
     if(@lastknownname == @player){
         @namehistorytip = concat(colorize('&b'), @player, colorize(' &fhas never changed their name.'));
@@ -63,11 +60,18 @@ proc _ncchat_json_format(@player, @pchannel, @pchat, @minimal){
         @namehistorytip = concat(colorize('Last known as &b'), @lastknownname);
     }
 
+    # Veteran tooltip
+    if(has_permission(@player, 'group.veteran')){
+
+    }
+
     @displayname = display_name(@player);
 
-    # server and channel tag
-    @body[] = associative_array('text': colorize('&7{&2S&7} '));
-    @body[] = associative_array(
+    ### chat headers ###
+    # server tag component
+    @servercomp = associative_array('text': colorize('&7{&2S&7} '));
+    # channel tag component
+    @channelcomp = associative_array(
         'text': concat(color(@chatcolor), '[', @channels[@pchannel]['nick'], '] '),
         'hoverEvent': associative_array(
             'action': 'show_text',
@@ -79,46 +83,49 @@ proc _ncchat_json_format(@player, @pchannel, @pchat, @minimal){
         ),
     );
 
-    # name formatting
-    if(@minimal){ # formatting in minimal mode
-        # name
-        @body[] = associative_array(
-            'text': colorize(concat(_nctitle_get_rank_color(@player), @displayname)),
-            'hoverEvent': associative_array(
-                'action': 'show_text',
-                # prefix, name, suffix hovertext
-                'value': colorize(concat(@prefix, @displayname, @suffix, '\n', @namehistorytip)),
-            ),
-            'clickEvent': associative_array(
-                'action': 'suggest_command',
-                'value': concat('/msg ', @player, ' '),
-            ),
-        );
-    } else{ # not formatting in minimal mode
-        # prefix, name, suffix
-        @body[] = associative_array('text': colorize(@prefix));
-        @body[] = associative_array(
-            'text': colorize(concat(_nctitle_get_rank_color(@player), @displayname)),
-            'hoverEvent': associative_array(
-                'action': 'show_text',
-                'value': @namehistorytip,
-            ),
-            'clickEvent': associative_array(
-                'action': 'suggest_command',
-                'value': concat('/msg ', @player, ' '),
-            ),
-        );
-        @body[] = associative_array('text': colorize(@suffix));
-    }
+    ### prefix, name, suffix ###
+    # prefix component
+    @prefixcomp = associative_array('text': colorize(@prefix));
+    # suffix component
+    @suffixcomp = associative_array('text': colorize(@suffix));
+    # name component
+    @namecomp = associative_array(
+        'text': colorize(concat(_nctitle_get_rank_color(@player), @displayname)),
+        'hoverEvent': associative_array(
+            'action': 'show_text',
+            # prefix, name, suffix hovertext
+            'value': colorize(concat(@prefix, @displayname, @suffix, '\n', @namehistorytip)),
+        ),
+        'clickEvent': associative_array(
+            'action': 'suggest_command',
+            'value': concat('/msg ', @player, ' '),
+        ),
+    );
 
     # Process @pchat (e.g. render urls)
     @processed = _ncchat_process_chat(@pchat);
 
-    # message body
+    ### message body ###
     # remember to sanitize @pchat!
-    @body[] = associative_array('text': ': ', 'color': @chatcolor, 'extra': @processed);
+    @messagecomp = associative_array('text': ': ', 'color': @chatcolor, 'extra': @processed);
 
-    return(json_encode(@body));
+    # construct expanded chat string
+    @expanded = array();
+    @expanded[] = @servercomp;
+    @expanded[] = @channelcomp;
+    @expanded[] = @prefixcomp;
+    @expanded[] = @namecomp;
+    @expanded[] = @suffixcomp;
+    @expanded[] = @messagecomp;
+
+    # construct minimal chat string
+    @minimal = array();
+    @minimal[] = @servercomp;
+    @minimal[] = @channelcomp;
+    @minimal[] = @namecomp;
+    @minimal[] = @messagecomp;
+
+    return(associative_array('expanded': json_encode(@expanded), 'minimal': json_encode(@minimal)));
 }
 
 # Given a player's chat message, process it to properly display URLs
@@ -170,7 +177,7 @@ proc _ncchat_process_chat(@pchat){
 
         @components[] = associative_array('text': @text[@i]);
         @components[] = associative_array(
-            'text': concat(color('AQUA'), @urltext),
+            'text': concat(color('WHITE'), @urltext),
             'clickEvent': associative_array(
                 'action': 'open_url',
                 'value': @urls[@i],
