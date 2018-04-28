@@ -75,7 +75,7 @@ proc _ncchat_json_format(@player, @pchannel, @pchat, @minimal){
         ),
         'clickEvent': associative_array(
             'action': 'suggest_command',
-            'value': '/g ',
+            'value': concat('/', to_lower(@channels[@pchannel]['nick']), ' '),
         ),
     );
 
