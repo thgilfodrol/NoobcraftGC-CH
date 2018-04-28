@@ -175,6 +175,18 @@ proc _ncchat_process_chat(@pchat){
             @urltext = @urls[@i]; # just display the original url
         }
 
+        # Check if url starts with http:// or https://
+        if(length(@urls[@i]) >= 11){ # 11 chars is shortest possible url, http://a.tk
+            # Check if first 7 or 8 chars is not http:// or https://, respectively
+            if(substr(@urls[@i], 0, 7) != 'http://' || substr(@urls[@i], 0, 8) != 'https://'){
+                # Prepend http header by default
+                @urls[@i] = concat('http://', @urls[@i]);
+            }
+            # else there is already a header
+        } else{ # no protocol header, assume missing
+            @urls[@i] = concat('http://', @urls[@i]); # prepend http header
+        }
+
         @components[] = associative_array('text': @text[@i]);
         @components[] = associative_array(
             'text': concat(color('WHITE'), @urltext),
