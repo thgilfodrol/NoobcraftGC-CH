@@ -289,7 +289,7 @@ proc _ncchat_previous_name(@puuid){
                     # Set their current name in the cache
                     # the -2nd element is the second element from the right
                     # we use the -1st element for changedToAt because that's the time they *stopped* using their previous name
-                    export(@key, associative_array('name': @body[-2]['name'], 'changedToAt': @body[-1]['name']));
+                    export(@key, associative_array('name': @body[-2]['name'], 'changedToAt': @body[-1]['changedToAt']));
 
                     # Since the -2nd element may be the original username (i.e. @body[-2] == @body[0])
                     # we check if the array contains a changedToAt value first
