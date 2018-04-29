@@ -54,7 +54,9 @@ proc _ncchat_json_format(@player, @pchannel, @pchat){
     @chatcolor = _ncchat_mc_to_json_color(@channels[@pchannel]['color']);
 
     @namedata = _ncchat_previous_name(puuid(@player));
-    if(@namedata['name'] == @player){
+    if(is_null(@namedata)){ # cache is being updated
+        @namehistorytip = concat(colorize('&a'), @player, colorize('&f\'s name cache is currently being updated.'));
+    } else if(@namedata['name'] == @player){
         # player's previous and current name is an exact match
         @namehistorytip = concat(colorize('&a'), @player, colorize(' &fhas never changed their name.'));
     } else{
@@ -301,7 +303,7 @@ proc _ncchat_previous_name(@puuid){
                 }
             } else{
                 console(concat('An error occurred when checking the previous name for ', @puuid));
-                console(concat('Mojang\s servers responded with: ', @response));
+                console(concat('Mojang\'s servers responded with: ', @response));
                 throw('BadEntityException', 'The Mojang API did not return 200.');
             }
         });
