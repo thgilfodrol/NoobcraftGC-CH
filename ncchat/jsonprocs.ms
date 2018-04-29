@@ -245,14 +245,50 @@ proc _ncchat_json_to_mc_color(@json){
     throw('Exception', 'This is not yet implemented.');
 }
 
-# Returns the player's last known name from memory (if stored), otherwise falls back to plast_known_name()
-proc _ncchat_last_known_name(@player){
-    @key = concat('ncchat.lastknownname.', @player);
+# Given player uuid, returns the player's previous name from memory (if stored)
+# Returns array containing their current name if they've never changed it, or null if the cache is being updated
+# Array keys:
+# name: previous name
+# changedToAt: when they changed to their current one (0 if original)
+proc _ncchat_previous_name(@puuid){
+    @key = concat('ncchat.lastknownname.', @puuid);
     @name = import(@key, null);
 
+    # Mojang uses UUIDs without dashes
+    @puuid = replace(@puuid, '-', '');
+
     if(@name == null){
-        @name = plast_known_name(@player);
-        export(@key, @name);
+#        @name = plast_known_name(@puuid);
+        http_request('https://api.mojang.com/user/profiles/'.@puuid.'/names', closure(@response){
+            if(@response['responseCode'] == 200){ # http ok
+                @body = json_decode(@response['body']);
+                @bodysize = array_size(@body);
+
+                if(@bodysize == 1){ # name hasn't been changed before
+                    # Set their current name in the cache
+                    export(@key, associative_array('name': @body[0]['name'], 'changedToAt': 0));
+                    # Don't return here, as we want to avoid concurrency issues
+                } else if(@bodysize > 1){ # name has been changed before
+                    # Set their current name in the cache
+                    # the -2nd element is the second element from the right
+                    export(@key, associative_array('name': @body[-2]['name'], 'changedToAt': 0));
+
+                    # Since the -2nd element may be the original username (i.e. @body[-2] == @body[0])
+                    # we check if the array contains a changedToAt value first
+                    if(array_size(@body[-2]) == 2){
+                        export(@key, associative_array('name': @body[-2]['name'], 'changedToAt': @body[-2]['changedToAt']));
+                    }
+                } else{ # 0 elements, should never happen
+                    throw('NotFoundException',
+                        concat('The Mojang API returned a 0 element json object when retrieving the previous name for ', @puuid)
+                    );
+                }
+            } else{
+                console(concat('An error occurred when checking the previous name for ', @puuid));
+                console(concat('Mojang\s servers responded with: ', @response));
+                throw('BadEntityException', 'The Mojang API did not return 200.');
+            }
+        });
     }
 
     return(@name);
