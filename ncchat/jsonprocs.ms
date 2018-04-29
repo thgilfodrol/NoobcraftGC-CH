@@ -53,11 +53,22 @@ proc _ncchat_json_format(@player, @pchannel, @pchat){
 
     @chatcolor = _ncchat_mc_to_json_color(@channels[@pchannel]['color']);
 
-    @lastknownname = _ncchat_last_known_name(@player);
-    if(@lastknownname == @player){
-        @namehistorytip = concat(colorize('&b'), @player, colorize(' &fhas never changed their name.'));
+    @namedata = _ncchat_previous_name(puuid(@player));
+    if(@namedata['name'] == @player){
+        # player's previous and current name is an exact match
+        @namehistorytip = concat(colorize('&a'), @player, colorize(' &fhas never changed their name.'));
     } else{
-        @namehistorytip = concat(colorize('Last known as &b'), @lastknownname);
+        if(@namedata['changedToAt'] == 0){ # original name
+            # "CURRENT_NAME was previously only known as PREVIOUS_NAME until DATE."
+            @namehistorytip = concat(colorize('&b'), @player, colorize(' &fwas previously only known as &b'),
+                @namedata['name'], colorize('&f until &6'), simple_date('yyyy/MM/dd z', @namedata['changedToAt']), colorize('&f.')
+            );
+        } else{
+            # "CURRENT_NAME was previously known as PREVIOUS_NAME until DATE."
+            @namehistorytip = concat(colorize('&b'), @player, colorize(' &fwas previously known as &b'),
+                @namedata['name'], colorize('&f until &6'), simple_date('yyyy/MM/dd z', @namedata['changedToAt']), colorize('&f.')
+            );
+        }
     }
 
     # Veteran tooltip
@@ -202,6 +213,10 @@ proc _ncchat_process_chat(@pchat){
     }
     @components[] = associative_array('text': @text[@numtext - 1]); # append final text chunk
 
+    ### DEBUG ###
+    #tmsg('ThgilFoDrol', 'with colour: '.colorize(@pchat));
+    #tmsg('ThgilFoDrol', 'without colour: '.@pchat);
+
     return(@components);
 }
 
@@ -271,13 +286,14 @@ proc _ncchat_previous_name(@puuid){
                 } else if(@bodysize > 1){ # name has been changed before
                     # Set their current name in the cache
                     # the -2nd element is the second element from the right
-                    export(@key, associative_array('name': @body[-2]['name'], 'changedToAt': 0));
+                    # we use the -1st element for changedToAt because that's the time they *stopped* using their previous name
+                    export(@key, associative_array('name': @body[-2]['name'], 'changedToAt': @body[-1]['name']));
 
                     # Since the -2nd element may be the original username (i.e. @body[-2] == @body[0])
                     # we check if the array contains a changedToAt value first
-                    if(array_size(@body[-2]) == 2){
-                        export(@key, associative_array('name': @body[-2]['name'], 'changedToAt': @body[-2]['changedToAt']));
-                    }
+#                    if(array_size(@body[-2]) == 2){
+#                        export(@key, associative_array('name': @body[-2]['name'], 'changedToAt': @body[-2]['changedToAt']));
+#                    }
                 } else{ # 0 elements, should never happen
                     throw('NotFoundException',
                         concat('The Mojang API returned a 0 element json object when retrieving the previous name for ', @puuid)
