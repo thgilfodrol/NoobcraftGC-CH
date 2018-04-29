@@ -62,12 +62,12 @@ proc _ncchat_json_format(@player, @pchannel, @pchat){
     } else{
         if(@namedata['changedToAt'] == 0){ # original name
             # "CURRENT_NAME was previously only known as PREVIOUS_NAME until DATE."
-            @namehistorytip = concat(colorize('&b'), @player, colorize(' &fwas previously only known as &b'),
+            @namehistorytip = concat(colorize('&a'), @player, colorize(' &fwas previously only known as &b'),
                 @namedata['name'], colorize('&f until &6'), simple_date('yyyy/MM/dd z', @namedata['changedToAt']), colorize('&f.')
             );
         } else{
             # "CURRENT_NAME was previously known as PREVIOUS_NAME until DATE."
-            @namehistorytip = concat(colorize('&b'), @player, colorize(' &fwas previously known as &b'),
+            @namehistorytip = concat(colorize('&a'), @player, colorize(' &fwas previously known as &b'),
                 @namedata['name'], colorize('&f until &6'), simple_date('yyyy/MM/dd z', @namedata['changedToAt']), colorize('&f.')
             );
         }
