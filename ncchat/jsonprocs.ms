@@ -178,7 +178,7 @@ proc _ncchat_process_chat(@pchat){
         # Check if url starts with http:// or https://
         if(length(@urls[@i]) >= 11){ # 11 chars is shortest possible url, http://a.tk
             # Check if first 7 or 8 chars is not http:// or https://, respectively
-            if(substr(@urls[@i], 0, 7) != 'http://' || substr(@urls[@i], 0, 8) != 'https://'){
+            if(substr(@urls[@i], 0, 7) != 'http://' && substr(@urls[@i], 0, 8) != 'https://'){
                 # Prepend http header by default
                 @urls[@i] = concat('http://', @urls[@i]);
             }
