@@ -2,19 +2,36 @@ proc _ncchat_get_channels(){
     @channels = associative_array();
     @channels['Global'] = associative_array(
         'color': '&7', # default text color
-        'nick': 'G',
-        'perm': 'herochat.speak.global',
-        'default': true); # if players are subscribed automatically
+        'nick': 'G', # nickname, used in channel tag formatting
+        'perm': 'herochat.speak.global', # required to speak in this channel
+        'socialspy': false, # if we should get socialspy alerts for this channel
+        'range': -1, # range of transmission, negative value means unlimited (i.e. global)
+        'default': true, # if players are subscribed automatically
+    );
     @channels['Staff'] = associative_array(
-        'color': '&a', # default text color
+        'color': '&a',
         'nick': 'S',
         'perm': 'herochat.speak.staff',
-        'default': true); # if players are subscribed automatically
+        'socialspy': false,
+        'range': -1,
+        'default': true,
+    );
     @channels['Local'] = associative_array(
-        'color': '&e', # default text color
+        'color': '&e',
         'nick': 'L',
         'perm': 'herochat.speak.local',
-        'default': true); # if players are subscribed automatically
+        'socialspy': true,
+        'range': 200,
+        'default': true,
+    );
+    @channels['Upsidedown'] = associative_array(
+        'color': '&b',
+        'nick': 'U',
+        'perm': 'herochat.speak.aharter',
+        'socialspy': false,
+        'range': -1,
+        'default': true,
+    );
 
     return(@channels);
 }
