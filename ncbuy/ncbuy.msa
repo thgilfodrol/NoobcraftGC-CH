@@ -1,102 +1,105 @@
-*:/ncbuy2 [$] = >>>
-    include('/home/mcma3ncmain/testservers/ncmainclone_2016-12-15/plugins/CommandHelper/LocalPackages/ncbuy/procs.ms');
-    if(has_permission('ncbuy.use')){
-        if($ == null || $ == ''){
-            msg(colorize('&2*&a=-=-=-=-=-=&7/&8{&6&nNoobCraft Store Manager&r&8}&7\\&a=-=-=-=-=-=&2*'));
-            msg(colorize('&6[Store] &aWelcome to the NoobCraft Ingame Currency Store!'));
-            msg(colorize('&6[Store] &aYou can buy various ingame items and abilities using ingame currency here.'));
-            msg(colorize('&6[Store] &aTo view available perks, type &e/ncbuy perk'));
-            msg(colorize('&6[Store] &aTo view available kits, type &e/ncbuy kit'));
-        } else{
-            @args = parse_args($);
-            @numOfArgs = array_size(@args);
-            @args = array_map(@args, closure(@value){
-                return(to_lower(@value));
-            });
+*:/ncbuy [$] = >>>
+    include('procs.ms');
+    if(!(has_permission('ncbuy.use'))){
+        msg(colorize('&cInsufficient permissions.'));
+        die();
+    }
 
-            switch(@args[0]){
-                case 'perk':
-                    if(@numOfArgs === 1){
+    if($ == null || $ == ''){
+        msg(colorize('&2*&a=-=-=-=-=-=&7/&8{&6&nNoobCraft Store Manager&r&8}&7\\&a=-=-=-=-=-=&2*'));
+        msg(colorize('&6[Store] &aWelcome to the NoobCraft Ingame Currency Store!'));
+        msg(colorize('&6[Store] &aYou can buy various ingame items and abilities using ingame currency here.'));
+        msg(colorize('&6[Store] &aTo view available perks, type &e/ncbuy perk'));
+        msg(colorize('&6[Store] &aTo view available kits, type &e/ncbuy kit'));
+    } else{
+        @args = parse_args($);
+        @numOfArgs = array_size(@args);
+        @args = array_map(@args, closure(@value){
+        return(to_lower(@value));
+        });
+
+        switch(@args[0]){
+            case 'perk':
+                if(@numOfArgs === 1){
+                    @owned = '';
+                    @perks = _ncbuy_get_perks();
+                    msg(colorize('&2*&a=-=-=-=-=-=&7/&8{&6&nNoobCraft Store (Perks)&r&8}&7\\&a=-=-=-=-=-=&2*'));
+                    msg(colorize('&6[Store] &aList of available perks and their costs:'));
+                    foreach(@perk:@values in @perks){
+                        if(has_permission(@values['permnode'])){    @owned = ' &r&2{owned}';    }
+
+                        msg(colorize('&7>> &5'.@perk.'&a, &e$'.@values['cost'].'&a (usable until next map)'.@owned));
+                        msg(colorize('&a'.@values['description']));
                         @owned = '';
-                        @perks = _ncbuy_get_perks();
-                        msg(colorize('&2*&a=-=-=-=-=-=&7/&8{&6&nNoobCraft Store (Perks)&r&8}&7\\&a=-=-=-=-=-=&2*'));
-                        msg(colorize('&6[Store] &aList of available perks and their costs:'));
-                        foreach(@perk:@values in @perks){
-                            if(has_permission(@values['permnode'])){    @owned = ' &r&2{owned}';    }
-                            msg(colorize('&7>> &5'.@perk.'&a, &e$'.@values['cost'].'&a (usable until next map)'.@owned));
-                            msg(colorize('&a'.@values['description']));
-                            @owned = '';
-                        }
-                        msg(colorize('&6[Store] &aExample usage: &e/ncbuy perk workbench'));
-                    } else if(@numOfArgs === 2){
-                        @perks = _ncbuy_get_perks();
-                        if(array_index_exists(@perks, @args[1])){ # if perk exists
-                            if(has_permission(@perks[@args[1]]['permnode'])){ # if they have the perk already
-                                msg(colorize('&6[Store] &cYou already own the perk &5'.@args[1].'&c.'));
-                            } else{
-                                @p = player();
-                                if(acc_balance(@p) >= @perks[@args[1]]['cost']){
-                                    acc_subtract(@p, @perks[@args[1]]['cost']);
-                                    runas('~console', '/perm player '.@p.' set '.@perks[@args[1]]['permnode']);
-                                    msg(colorize('&6[Store] &aPerk &5'.@args[1].'&a purchased! New balance: &e$'.acc_balance(@p)));
-                                    x_new_thread(time(), closure(){
-                                        @log = get_value('ncbuy.log');
-                                        if(@log != null){
-                                            @log[] = '- '.@p.' ('.puuid(@p).') bought '.@perks[@args[1]]['permnode'].' at '.time().' for '.@perks[@args[1]]['cost'];
-                                        } else{
-                                            @log = array('- '.@p.' ('.puuid(@p).') bought '.@perks[@args[1]]['permnode'].' at '.time().' for '.@perks[@args[1]]['cost']);
-                                        }
-                                        store_value('ncbuy.log', @log);
-                                    });
-                                } else{ # not enough money! :(
-                                    msg(colorize('&6[Store] &cYou do not have enough money to buy &5'.@args[1].'&c.'));
-                                }
-                            }
-                        } else{
-                            msg(colorize('&6[Store] &cNo perk named &5'.@args[1].'&c was found.'));
-                        }
                     }
-                case 'kit':
-                    if(@numOfArgs === 1){
-                        msg(colorize('&2*&a=-=-=-=-=-=&7/&8{&6&nNoobCraft Store (Kits)&r&8}&7\\&a=-=-=-=-=-=&2*'));
-                        msg(colorize('&6[Store] &aList of available kits and their costs:'));
-                        foreach(@kit:@values in _ncbuy_get_kits()){
-                            msg(colorize('&7>> &5'.@kit.'&a, &e$'.@values['cost'].'&a (one time use)'));
-                            msg(colorize('&a'.@values['description']));
-                        }
-                        msg(colorize('&6[Store] &aExample usage: &e/ncbuy kit tools'));
-                    } else if(@numOfArgs === 2){
-                        @kits = _ncbuy_get_kits();
-                        if(array_index_exists(@kits, @args[1])){ # if kit exists
+                msg(colorize('&6[Store] &aExample usage: &e/ncbuy perk workbench'));
+                } else if(@numOfArgs === 2){
+                    @perks = _ncbuy_get_perks();
+                    if(array_index_exists(@perks, @args[1])){ # if perk exists
+                        if(has_permission(@perks[@args[1]]['permnode'])){ # if they have the perk already
+                            msg(colorize('&6[Store] &cYou already own the perk &5'.@args[1].'&c.'));
+                        } else{
                             @p = player();
-                            if(acc_balance(@p) >= @kits[@args[1]]['cost']){
-                                acc_subtract(@p, @kits[@args[1]]['cost']);
-                                array_iterate(@kits[@args[1]]['items'], closure(@key, @value){
-                                    pgive_item(@value['type'], @value['qty'], @value['meta']);
+                            if(acc_balance(@p) >= @perks[@args[1]]['cost']){
+                                acc_subtract(@p, @perks[@args[1]]['cost']);
+                                runas('~console', '/perm player '.@p.' set '.@perks[@args[1]]['permnode']);
+                                msg(colorize('&6[Store] &aPerk &5'.@args[1].'&a purchased! New balance: &e$'.acc_balance(@p)));
+
+                                x_new_thread(time(), closure(){
+                                    @log = get_value('ncbuy.log');
+                                    if(@log != null){
+                                        @log[] = '- '.@p.' ('.puuid(@p).') bought '.@perks[@args[1]]['permnode'].' at '.time().' for '.@perks[@args[1]]['cost'];
+                                    } else{
+                                        @log = array('- '.@p.' ('.puuid(@p).') bought '.@perks[@args[1]]['permnode'].' at '.time().' for '.@perks[@args[1]]['cost']);
+                                    }
+                                    store_value('ncbuy.log', @log);
                                 });
-                                msg(colorize('&6[Store] &aKit &5'.@args[1].'&a purchased! New balance: &e$'.acc_balance(@p)));
                             } else{ # not enough money! :(
                                 msg(colorize('&6[Store] &cYou do not have enough money to buy &5'.@args[1].'&c.'));
                             }
-                        } else{
-                            msg(colorize('&6[Store] &cNo kit named &5'.@args[1].'&c was found.'));
                         }
+                    } else{
+                        msg(colorize('&6[Store] &cNo perk named &5'.@args[1].'&c was found.'));
                     }
-                case 'spell':
-                    die('not implemented');
-                case 'viewlog':
-                    x_new_thread(time(), closure(){
-                        @log = get_value('ncbuy.log');
-                        msg(colorize('&6[Store] &7Dumping purchase log ('.array_size(@log).' purchases)...'));
-                        foreach(@purchase in @log){
-                            msg(@purchase);
+                }
+            case 'kit':
+                if(@numOfArgs === 1){
+                    msg(colorize('&2*&a=-=-=-=-=-=&7/&8{&6&nNoobCraft Store (Kits)&r&8}&7\\&a=-=-=-=-=-=&2*'));
+                    msg(colorize('&6[Store] &aList of available kits and their costs:'));
+                    foreach(@kit:@values in _ncbuy_get_kits()){
+                        msg(colorize('&7>> &5'.@kit.'&a, &e$'.@values['cost'].'&a (one time use)'));
+                        msg(colorize('&a'.@values['description']));
+                    }
+                    msg(colorize('&6[Store] &aExample usage: &e/ncbuy kit tools'));
+                } else if(@numOfArgs === 2){
+                    @kits = _ncbuy_get_kits();
+                    if(array_index_exists(@kits, @args[1])){ # if kit exists
+                        @p = player();
+                        if(acc_balance(@p) >= @kits[@args[1]]['cost']){
+                            acc_subtract(@p, @kits[@args[1]]['cost']);
+                            array_iterate(@kits[@args[1]]['items'], closure(@key, @value){
+                                pgive_item(@value['type'], @value['qty'], @value['meta']);
+                            });
+                            msg(colorize('&6[Store] &aKit &5'.@args[1].'&a purchased! New balance: &e$'.acc_balance(@p)));
+                        } else{ # not enough money! :(
+                            msg(colorize('&6[Store] &cYou do not have enough money to buy &5'.@args[1].'&c.'));
                         }
-                    });
-                default:
-                    msg(colorize('&6[Store] &cUnrecognized subcommand '.@args[0].'. Type /ncbuy for usage help.'));
-            }
+                    } else{
+                        msg(colorize('&6[Store] &cNo kit named &5'.@args[1].'&c was found.'));
+                    }
+                }
+            case 'spell':
+                die('not implemented');
+            case 'viewlog':
+                x_new_thread(time(), closure(){
+                    @log = get_value('ncbuy.log');
+                    msg(colorize('&6[Store] &7Dumping purchase log ('.array_size(@log).' purchases)...'));
+                    foreach(@purchase in @log){
+                        msg(@purchase);
+                    }
+                });
+            default:
+                msg(colorize('&6[Store] &cUnrecognized subcommand '.@args[0].'. Type /ncbuy for usage help.'));
         }
-    } else{
-        msg(colorize('&cInsufficient permissions.'));
     }
 <<<
