@@ -1,11 +1,11 @@
 proc _ncbuy_get_perks(){
     @perks = array();
     @perks['enderchest'] = array(
-            'description': 'Access your ender chest with /ec',
+        'description': 'Access your ender chest with /ec',
         'permnode': 'essentials.enderchest',
         'cost': 55000);
     @perks['workbench'] = array(
-            'description': 'Open a crafting table interface anywhere with /workbench',
+        'description': 'Open a crafting table interface anywhere with /workbench',
         'permnode': 'essentials.workbench',
         'cost': 6000);
     @perks['backondeath'] = array(
