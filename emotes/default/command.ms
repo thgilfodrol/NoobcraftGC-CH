@@ -1,4 +1,4 @@
-include('/home/mcma3ncmain/testservers/ncmainclone_2016-12-15/plugins/CommandHelper/LocalPackages/emotes/default/procs.ms');
+include('procs.ms');
 
 @emotes = _ncemotes_get_emotes();
 # iterate over list of emotes to register each as an actual command using metadata
