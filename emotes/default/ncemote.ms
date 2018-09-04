@@ -7,13 +7,14 @@ register_command('ncemote', array(
     'permission': 'nc.emotes.ncemote',
     'noPermMsg': colorize('&cYou do not have permission to use this command.'),
     'tabcompleter': closure(@alias, @sender, @args) {
-        if(array_size(@args) == 0) {
-            return(all_players());
+        @subcommands = array('list', 'info', 'help');
+
+        if(array_size(@args) == 1){
+            @search = @args[array_size(@args) - 1];
+            return(array_filter(@subcommands, closure(@index, @subcommand) {
+                return(equals_ic(@search, substr(@subcommand, 0, length(@search))));
+            }));
         }
-        @search = @args[array_size(@args) - 1];
-        return(array_filter(all_players(), closure(@index, @player) {
-            return(equals_ic(@search, substr(@player, 0, length(@search))));
-        }));
     },
     'aliases': array('ncemotes', 'emotes', 'emote'),
     'executor': closure(@alias, @sender, @args){
@@ -65,6 +66,9 @@ register_command('ncemote', array(
 
                     return(true);
                 case 'info':
+                    msg(colorize('&cnot implemented. might not be implemented. pending extra thought.'));
+                    msg(colorize('&cyours truly,'));
+                    msg(colorize('-thiggypudding'));
                     return(true);
                 case 'help':
                     execute(@helpmenu);
