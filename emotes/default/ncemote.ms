@@ -1,4 +1,4 @@
-include('/home/mcma3ncmain/testservers/ncmainclone_2016-12-15/plugins/CommandHelper/LocalPackages/emotes/default/procs.ms');
+include('procs.ms');
 
 # helper command for nc emote system
 register_command('ncemote', array(
