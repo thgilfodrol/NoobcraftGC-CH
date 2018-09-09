@@ -1,7 +1,7 @@
 *:/ncbuy [$] = >>>
     include('procs.ms');
     if(!(has_permission('ncbuy.use'))){
-        msg(colorize('&cInsufficient permissions.'));
+        msg(colorize('&cInsufficient permissions (this command is WIP for 1.13.1). '));
         die();
     }
 
