@@ -25,6 +25,8 @@ bind('player_chat', array('priority': 'high'), null, @event,
             }
         }
 
+        discord_broadcast('server', concat('<', @event['player'], '> : ', @event['message']))
+
         cancel();
 
     } else if(@pchannel == 'Staff'){
@@ -37,6 +39,8 @@ bind('player_chat', array('priority': 'high'), null, @event,
             });
             modify_event('recipients', @recipients);
         modify_event('format', @chat);
+
+        discord_broadcast('staff', concat('<', @event['player'], '> : ', @event['message']))
     } else if(@pchannel == 'Local'){
             @sploc = ploc(@event['player']); # sender player location
         @recipients = array_filter(@event['recipients'], closure(@key, @recipient){
