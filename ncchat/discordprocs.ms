@@ -6,6 +6,7 @@ proc _discord_get_server_id(){
 # return bot token
 proc _discord_get_bot_token(){
     @path = '../../../../bottoken.txt'
+    @token = json_decode(read(@path))['bottoken']
 
-    return(read(@path))
+    return(@token)
 }
