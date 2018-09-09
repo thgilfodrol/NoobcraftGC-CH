@@ -6,15 +6,20 @@ register_command('nctitle', array(
     'permission': 'nc.title.list',
     'noPermMsg': colorize('&cInsufficient permissions (you should have this, but you don\'t. try reporting it to staff?)'),
     'tabcompleter': closure(@alias, @sender, @args) {
-        if(array_size(@args) == 1) {
-            return(array('list', 'set', 'clear', 'info', 'help'));
-        } else if((array_size(@args) == 2) && ((@args[0] == 'set') || (@args[0] == 'info'))){
-            @titles = array_keys(_nctitle_get_titles());
+        @numargs = array_size(@args);
+        @search = @args[@numargs - 1];
 
-            return(@titles);
+        if(@numargs == 1) {
+            @options = array('list', 'set', 'clear', 'info', 'help');
+        } else if((@numargs == 2) && ((@args[0] == 'set') || (@args[0] == 'info'))){
+            @options = array_keys(_nctitle_get_titles());
         } else{
             return(array());
         }
+
+        return(array_filter(@options, closure(@index, @option) {
+            return(equals_ic(@search, substr(@option, 0, length(@search))));
+        }));
     },
     'executor': closure(@alias, @sender, @args) {
         @numargs = array_size(@args);
