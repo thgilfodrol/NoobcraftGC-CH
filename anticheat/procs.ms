@@ -28,19 +28,19 @@ proc _ncanticheat_get_surrounding_blocks(@locarray){
 # Return array mapping ore ids to names
 proc _ncanticheat_get_ores(){
     @ores = associative_array(
-        '129': associative_array(
+        'EMERALD_ORE': associative_array(
             'name': 'emerald',
             'color': '&a',
         ),
-        '56': associative_array(
+        'DIAMOND_ORE': associative_array(
             'name': 'diamond',
             'color': '&b',
         ),
-        '15': associative_array(
+        'IRON_ORE': associative_array(
             'name': 'iron',
             'color': '&7',
         ),
-        '14': associative_array(
+        'GOLD_ORE': associative_array(
             'name': 'gold',
             'color': '&e',
         ),
