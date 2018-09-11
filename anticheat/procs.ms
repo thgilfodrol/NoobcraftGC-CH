@@ -1,6 +1,6 @@
 # Given a keyed loc array, return an array of surrounding blocks with the same id as keyed loc arrays
 proc _ncanticheat_get_surrounding_blocks(@locarray){
-    @givenblockid = get_block_at(@locarray);
+    @givenblockid = get_block(@locarray);
     @surrounding = array();
 
     for(@x = @locarray['x'] - 1, @x <= @locarray['x'] + 1, @x++){
@@ -14,7 +14,7 @@ proc _ncanticheat_get_surrounding_blocks(@locarray){
                 );
 
                 # check if candidate block id matches block id of given block
-                if(@givenblockid == get_block_at(@candidateblock)){
+                if(@givenblockid == get_block(@candidateblock)){
                     # matches, so we add to array
                     @surrounding[] = @candidateblock;
                 }
