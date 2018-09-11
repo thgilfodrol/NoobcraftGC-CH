@@ -3,7 +3,7 @@ bind('block_break', array('priority': 'monitor'), null, @event,
     @ores = _ncanticheat_get_ores();
 
     # player is in survival, and the block broken is an ore that we track
-        if(pmode(@event['player']) == 'SURVIVAL' && array_index_exists(@ores, string(@event['block']['type']))){
+        if(pmode(@event['player']) == 'SURVIVAL' && array_index_exists(@ores, string(@event['block']))){
         @counter = 0;
         @matches = array();
         @eventblock = associative_array( # prevent duplicates in final array where you have two of this array, with integer keys and without
@@ -53,7 +53,8 @@ bind('block_break', array('priority': 'monitor'), null, @event,
             # there may be more ores we didn't record
             @quantity .= '+';
         }
-        @ore = @ores[string(@event['block']['type'])];
+
+        @ore = @ores[string(@event['block'])];
         @ploc = array_normalize(ploc(@event['player']))[0..3];
         @ploc[1] += 1; # why the hell is ploc returning a block below the player
         broadcast(concat(colorize('&c[!] '.@ore['color']), @event['player'], ' found ', @quantity, ' ', @ore['name'], ' ore (light: ', get_light_at(@ploc), ').'), 'herochat.speak.staff');
@@ -81,7 +82,7 @@ bind('block_place', array('priority': 'monitor'), null, @event,
     }
 
     # check if we track the block type that was placed
-    if(array_index_exists(@ores, string(@event['type']))){
+    if(array_index_exists(@ores, string(@event['block']))){
         # add to tracked blocks list
         @tracked[] = @eventblock;
         export(@storagekey, @tracked); # update tracked blocks list
