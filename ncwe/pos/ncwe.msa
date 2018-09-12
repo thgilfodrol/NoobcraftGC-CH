@@ -1,0 +1,40 @@
+*:/ncwe = >>>
+    include('procs.ms');
+
+    @p = player();
+    @pos1 = _ncwe_get_pos1(@p);
+    @pos2 = _ncwe_get_pos2(@p);
+    @total = _ncwe_get_sel_total(@p);
+
+    if(is_null(@pos1) || is_null(@pos2)){
+        die(colorize('&eNCWE //&c pos1 and/or pos2 are not set.'));
+    }
+
+    @json = associative_array(
+        'text': colorize('&eNCWE //&b Click to generate /fill.'),
+        'hoverEvent': associative_array(
+            'action': 'show_text',
+            'value': concat(
+                colorize('&apos1: &b'.@pos1.'\n'),
+                colorize('&apos2: &b'.@pos2.'\n'),
+                colorize('&eTotal: &b'.@total)
+            ),
+        ),
+        'clickEvent': associative_array(
+            'action': 'suggest_command',
+            'value': sconcat('/fill', @pos1['x'], @pos1['y'], @pos1['z'], @pos2['x'], @pos2['y'], @pos2['z'], ''),
+        ),
+    );
+
+    runas('~console', '/tellraw '.@p.' '.json_encode(@json));
+    console("[NCWE] Generated tellraw with pos1: @pos1 and pos2: @pos2 with a total size of @total blocks.", false);
+<<<
+
+*:/ncwe sel = >>>
+    include('procs.ms');
+
+    @p = player();
+
+    _ncwe_clear_pos(@p);
+    msg(colorize('&eNCWE //&b Selection cleared.'));
+<<<
