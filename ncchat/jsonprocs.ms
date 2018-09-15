@@ -1,5 +1,5 @@
 include('procs.ms');
-include('../names/procs.ms');
+include('../nctitle/procs.ms');
 
 # Send a tellraw message @args to @target
 # @target: target selector, defaults to @a
