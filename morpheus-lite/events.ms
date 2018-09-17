@@ -16,7 +16,10 @@ bind('player_enter_bed', null, null, @event,
         # set time to day
         set_world_time('world', 0);
 
+        @announcement = array('rise and shine!', 'eggs are bakey!', '*rooster noises*!', 'a new day is here!', 'time to get up!');
+        @verb = array('snoozed', 'took a nap', 'had some shut-eye', 'hit the hay', 'went to bed', 'laid down for a bit', 'fell asleep');
+
         # broadcast message alert
-        broadcast(colorize(concat('&7{&2S&7} [G] &5[Announcer]&7: Wakey wakey, rise and shine! ', @event['player'], ' snoozed and now it\'s day. Tada!')));
+        broadcast(colorize(concat('&7{&2S&7} [G] &5[Announcer]&7: Wakey wakey, ', array_rand(@announcement, 1, false)[0], ' ', @event['player'], ' ', array_rand(@verb, 1, false)[0], ' and now it\'s day. Tada!')));
     })
 )
