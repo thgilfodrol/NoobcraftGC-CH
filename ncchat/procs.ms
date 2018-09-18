@@ -44,29 +44,16 @@ proc _ncchat_format(@player, @pchannel){
     @prefix = vault_user_prefix(pworld(@player), @player);
     @suffix = vault_user_suffix(pworld(@player), @player);
 
-    if(@pchannel == 'Global'){
-        @col = @channels['Global']['color'];
-        @nick = @channels['Global']['nick'];
-
-            return(colorize(@col.'{&2S'.@col.'} ['.@nick.'] &f'.@prefix.'%1$s'.@suffix.@col.': %2$s'));
-    } else if(@pchannel == 'Staff'){
-            @col = @channels['Staff']['color'];
-        @nick = @channels['Staff']['nick'];
-
-        return(colorize(@col.'{&2S'.@col.'} ['.@nick.'] &f'.@prefix.'%1$s'.@suffix.@col.': %2$s'));
-    } else if(@pchannel == 'Local'){
-        @col = @channels['Local']['color'];
-        @nick = @channels['Local']['nick'];
-
-            return(colorize(@col.'{&2S'.@col.'} ['.@nick.'] &f'.@prefix.'%1$s'.@suffix.@col.': %2$s'));
-    } else if(@pchannel == 'Upsidedown'){
-        @col = @channels['Upsidedown']['color'];
-        @nick = @channels['Upsidedown']['nick'];
-
-            return(colorize(@col.'{&2S'.@col.'} ['.@nick.'] &f'.@prefix.'%1$s'.@suffix.@col.': %2$s'));
+    if(!(array_contains(array_keys(@channels), @pchannel))){
+        throw('NotFoundException', 'Player\'s channel '.@pchannel.' did not match a known channel name.');
     }
 
-    return('<%1$s> %2$s'); # default format
+    @col = @channels[@pchannel]['color'];
+    @nick = @channels[@pchannel]['nick'];
+
+        return(colorize('&7{&2S&7} '.@col.'['.@nick.'] &f'.@prefix.'%1$s'.@suffix.@col.': %2$s'));
+
+    # return('<%1$s> %2$s'); # default format
 }
 
 proc _ncchat_format_emote(@player, @pchannel, @action){
