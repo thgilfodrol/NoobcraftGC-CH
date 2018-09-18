@@ -16,7 +16,7 @@ bind('player_enter_bed', null, null, @event,
         # set time to day
         set_world_time('world', 0);
 
-        @announcement = array('rise and shine!', 'eggs are bakey!', '*rooster noises*!', 'a new day is here!', 'time to get up!');
+        @announcement = array('rise and shine!', 'eggs are bakey!', '*rooster noises*!', 'a new day is here!', 'time to get up!', 'it\'s day-breaky!');
         @verb = array('snoozed', 'took a nap', 'had some shut-eye', 'hit the hay', 'went to bed', 'laid down for a bit', 'fell asleep');
 
         # broadcast message alert
