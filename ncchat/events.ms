@@ -1,4 +1,5 @@
 include('procs.ms');
+include('chprocs.ms');
 include('jsonprocs.ms');
 
 bind('player_chat', array('priority': 'high'), null, @event,
@@ -25,10 +26,11 @@ bind('player_chat', array('priority': 'high'), null, @event,
             }
         }
 
-        discord_broadcast('server', concat('<', @event['player'], '> : ', @event['message']))
+        discord_broadcast('server', concat('<', @event['player'], '> ', @event['message']))
 
         cancel();
 
+        console(concat('{S} [', @channels[@pchannel]['nick'], '] ', @event['player'], ': ', @event['message']), false);
     } else if(@pchannel == 'Staff'){
             @chat = _ncchat_format(@event['player'], @pchannel);
         @recipients = array_map(@event['recipients'], closure(@recipient){
@@ -40,7 +42,12 @@ bind('player_chat', array('priority': 'high'), null, @event,
             modify_event('recipients', @recipients);
         modify_event('format', @chat);
 
-        discord_broadcast('staff', concat('<', @event['player'], '> : ', @event['message']))
+        #discord_broadcast('staff', concat('<', @event['player'], '> ', @event['message']))
+    } else if(@pchannel == 'Admin'){
+        @msgresult = _ncchat_generate_message(@event['player']);
+
+        modify_event('recipients', @msgresult['recipients']);
+        modify_event('format', @msgresult['format']);
     } else if(@pchannel == 'Local'){
             @sploc = ploc(@event['player']); # sender player location
         @recipients = array_filter(@event['recipients'], closure(@key, @recipient){
@@ -88,5 +95,4 @@ bind('player_chat', array('priority': 'high'), null, @event,
             modify_event('format', @chat);
     }
 
-    console(concat('{S} [', @channels[@pchannel]['nick'], '] ', @event['player'], ': ', @event['message']), false);
 )
