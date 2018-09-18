@@ -1,37 +1,30 @@
 proc _ncchat_get_channels(){
     @channels = associative_array();
     @channels['Global'] = associative_array(
-        'color': '&7', # default text color
-        'nick': 'G', # nickname, used in channel tag formatting
-        'perm': 'herochat.speak.global', # required to speak in this channel
-        'socialspy': false, # if we should get socialspy alerts for this channel
-        'range': -1, # range of transmission, negative value means unlimited (i.e. global)
-        'default': true, # if players are subscribed automatically
-    );
+            'color': '&7', # default text color
+        'nick': 'G',
+            'perm': 'herochat.speak.global',
+        'default': true); # if players are subscribed automatically
     @channels['Staff'] = associative_array(
-        'color': '&a',
+        'color': '&a', # default text color
         'nick': 'S',
-        'perm': 'herochat.speak.staff',
-        'socialspy': false,
-        'range': -1,
-        'default': true,
-    );
+            'perm': 'herochat.speak.staff',
+        'default': true); # if players are subscribed automatically
     @channels['Local'] = associative_array(
-        'color': '&e',
+        'color': '&e', # default text color
         'nick': 'L',
         'perm': 'herochat.speak.local',
-        'socialspy': true,
-        'range': 200,
-        'default': true,
-    );
+        'default': true); # if players are subscribed automatically
     @channels['Upsidedown'] = associative_array(
-        'color': '&b',
+        'color': '&b', # default text color
         'nick': 'U',
         'perm': 'herochat.speak.aharter',
-        'socialspy': false,
-        'range': -1,
-        'default': true,
-    );
+        'default': true); # if players are subscribed automatically
+    @channels['Admin'] = associative_array(
+        'color': '&c', # default text color
+        'nick': 'A',
+        'perm': 'herochat.speak.admin',
+        'default': true); # if players are subscribed automatically
 
     return(@channels);
 }
@@ -55,9 +48,9 @@ proc _ncchat_format(@player, @pchannel){
         @col = @channels['Global']['color'];
         @nick = @channels['Global']['nick'];
 
-        return(colorize(@col.'{&2S'.@col.'} ['.@nick.'] &f'.@prefix.'%1$s'.@suffix.@col.': %2$s'));
+            return(colorize(@col.'{&2S'.@col.'} ['.@nick.'] &f'.@prefix.'%1$s'.@suffix.@col.': %2$s'));
     } else if(@pchannel == 'Staff'){
-        @col = @channels['Staff']['color'];
+            @col = @channels['Staff']['color'];
         @nick = @channels['Staff']['nick'];
 
         return(colorize(@col.'{&2S'.@col.'} ['.@nick.'] &f'.@prefix.'%1$s'.@suffix.@col.': %2$s'));
@@ -65,7 +58,12 @@ proc _ncchat_format(@player, @pchannel){
         @col = @channels['Local']['color'];
         @nick = @channels['Local']['nick'];
 
-        return(colorize(@col.'{&2S'.@col.'} ['.@nick.'] &f'.@prefix.'%1$s'.@suffix.@col.': %2$s'));
+            return(colorize(@col.'{&2S'.@col.'} ['.@nick.'] &f'.@prefix.'%1$s'.@suffix.@col.': %2$s'));
+    } else if(@pchannel == 'Upsidedown'){
+        @col = @channels['Upsidedown']['color'];
+        @nick = @channels['Upsidedown']['nick'];
+
+            return(colorize(@col.'{&2S'.@col.'} ['.@nick.'] &f'.@prefix.'%1$s'.@suffix.@col.': %2$s'));
     }
 
     return('<%1$s> %2$s'); # default format
@@ -95,8 +93,8 @@ proc _ncchat_get_channel_full_name(@partialname){
 
     foreach(@channel:@data in @channels){
         if(@partialname == to_lower(@data['nick']) || @partialname == to_lower(@channel)){ # matches channel nick or complete name
-            @channelfullname = to_lower(@channel);
-            return(concat(to_upper(@channelfullname[0]), @channelfullname[1..]));
+                @channelfullname = to_lower(@channel);
+                return(concat(to_upper(@channelfullname[0]), @channelfullname[1..]));
         }
     }
 
