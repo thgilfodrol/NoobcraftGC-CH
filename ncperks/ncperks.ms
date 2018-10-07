@@ -11,12 +11,16 @@ register_command('ncperks', array(
         @search = @args[@numargs - 1];
 
         if(@numargs == 1) {
-            @options = array('list', 'set', 'clear', 'info', 'help');
-        } else if((@numargs == 2) && ((@args[0] == 'set') || (@args[0] == 'info'))){
-            @options = array_keys(_nctitle_get_titles());
+            @options = array('prefix', 'suffix', 'help');
+        } else if((@numargs == 2) && ((@args[0] == 'prefix') || (@args[0] == 'suffix'))){
+            @options = array('set', 'unset');
         } else{
             return(array());
         }
+
+        return(array_filter(@options, closure(@index, @option) {
+            return(equals_ic(@search, substr(@option, 0, length(@search))));
+        }));
     },
     'executor': closure(@alias, @sender, @args) {
         # prevent console or cmd blocks from using this
