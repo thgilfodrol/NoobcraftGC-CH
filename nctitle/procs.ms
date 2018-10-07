@@ -105,3 +105,12 @@ proc _nctitle_get_rank_color(@player){
         return('&2');
     }
 }
+
+# returns the player's name with prefix and suffix applied
+# (basically what shows up in chat)
+proc _nctitle_get_formatted_name(@p){
+    @rcol = _nctitle_get_rank_color(@p); # rank colour
+    @prefix = vault_user_prefix(pworld(@p), @p);
+    @suffix = vault_user_suffix(pworld(@p), @p);
+    return(colorize(concat(@prefix, @rcol, display_name(@p), @suffix)));
+}
