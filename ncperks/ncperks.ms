@@ -11,7 +11,7 @@ register_command('ncperks', array(
         @search = @args[@numargs - 1];
 
         if(@numargs == 1) {
-            @options = array('prefix', 'suffix', 'help');
+            @options = array('prefix', 'suffix', 'help', 'colors');
         } else if((@numargs == 2) && ((@args[0] == 'prefix') || (@args[0] == 'suffix'))){
             @options = array('set', 'unset');
         } else{
@@ -141,7 +141,14 @@ register_command('ncperks', array(
                         msg(colorize('&6NC Perks >> &7Suffix Config'));
                         msg(colorize('&b/ncperks &fsuffix set <suffix>&7 - set your custom suffix.'));
                         msg(colorize('&b/ncperks &fsuffix unset&7 - remove your suffix.'));
+                        return(true);
                     }
+                case 'colors':
+                    @colors = colorize(comp_read('data/colors.txt'));
+                    msg(colorize('&6NC Perks >> &7Color Codes'));
+                    msg(@colors);
+
+                    return(true);
                 default:
                     msg(colorize('&6NC Perks >> &7Unrecognized subcommand &f'.@args[0].'&7.'));
                     return(false);
