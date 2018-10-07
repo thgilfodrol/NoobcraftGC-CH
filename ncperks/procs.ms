@@ -3,6 +3,9 @@
 proc _ncperks_set_meta(@player, @type, @input, @priority){
     # remove double quotes from input
     @input = replace(@input, '"', '');
+    # disallow obfuscated and dark red
+    @input = replace(@input, '&k', '');
+    @input = replace(@input, '&4', '');
 
     if(@type == 'prefix'){
         @format = concat('&8[', @input, '&8]&r ');
