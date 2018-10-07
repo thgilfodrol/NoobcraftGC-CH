@@ -7,7 +7,7 @@ proc _ncperks_set_meta(@player, @type, @input, @priority){
     if(@type == 'prefix'){
         @format = concat('&8[', @input, '&8]&r ');
     } else if(@type == 'suffix'){
-        @format = concat('&8[', @input, '&8]&r');
+        @format = concat(' &8[', @input, '&8]&r');
     } else{
         throw('NotFoundException', 'Expecting type \'prefix\' or \'suffix\', but found \''.@type.'\' instead.');
     }
