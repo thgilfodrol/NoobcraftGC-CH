@@ -123,6 +123,38 @@ proc _nctitle_get_titles(){
         'info': 'reserved for Donor 1.',
         'permnode': 'nc.perks.titles.tier.1');
 
+    # donor 2 titles
+    @titles['awild'] = array(
+        'display': '[A Wild]',
+        'special': false,
+        'donor': true,
+        'info': 'reserved for Donor 2.',
+        'permnode': 'nc.perks.titles.tier.2');
+    @titles['king'] = array(
+        'display': '[King]',
+        'special': false,
+        'donor': true,
+        'info': 'reserved for Donor 2.',
+        'permnode': 'nc.perks.titles.tier.2');
+    @titles['queen'] = array(
+        'display': '[Queen]',
+        'special': false,
+        'donor': true,
+        'info': 'reserved for Donor 2.',
+        'permnode': 'nc.perks.titles.tier.2');
+    @titles['prince'] = array(
+        'display': '[Prince]',
+        'special': false,
+        'donor': true,
+        'info': 'reserved for Donor 2.',
+        'permnode': 'nc.perks.titles.tier.2');
+    @titles['princess'] = array(
+        'display': '[Princess]',
+        'special': false,
+        'donor': true,
+        'info': 'reserved for Donor 2.',
+        'permnode': 'nc.perks.titles.tier.2');
+
     return(@titles);
 }
 
