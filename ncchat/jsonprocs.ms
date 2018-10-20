@@ -107,7 +107,7 @@ proc _ncchat_json_format(@player, @pchannel, @pchat){
         'hoverEvent': associative_array(
             'action': 'show_text',
             # prefix, name, suffix hovertext
-            'value': colorize(concat(@prefix, @displayname, @suffix, '\n', @namehistorytip)),
+            'value': colorize(concat(@prefix, _nctitle_get_rank_color(@player), @displayname, @suffix, '\n', @namehistorytip)),
         ),
         'clickEvent': associative_array(
             'action': 'suggest_command',
