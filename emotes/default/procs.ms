@@ -172,6 +172,8 @@ proc _ncemotes_get_emotes(){
         'format': 'works');
     @emotes['yawn'] = array(
         'format': 'yawns');
+    @emotes['um'] = array(
+    	'format': 'ums');
 
     return(@emotes);
 }
