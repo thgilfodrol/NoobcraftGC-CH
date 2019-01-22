@@ -3,19 +3,19 @@ proc _ncbuy_get_perks(){
     @perks['enderchest'] = array(
         'description': 'Access your ender chest with /ec',
         'permnode': 'essentials.enderchest',
-        'cost': 55000);
+        'cost': 27500);
     @perks['workbench'] = array(
         'description': 'Open a crafting table interface anywhere with /workbench',
         'permnode': 'essentials.workbench',
-        'cost': 6000);
+        'cost': 3000);
     @perks['backondeath'] = array(
         'description': 'Return to where you died using /back',
         'permnode': 'essentials.back.ondeath',
-        'cost': 60000);
+        'cost': 35000);
     @perks['keepxp'] = array(
         'description': 'Keep your experience if you die',
         'permnode': 'essentials.keepxp',
-        'cost': 30000);
+        'cost': 25000);
 
     return(@perks);
 }
