@@ -9,6 +9,7 @@ bind('player_enter_bed', null, null, @event,
         # check if player is still in bed
         if(!pinfo(@event['player'])[16]){
             console(@event['player'].' was in a bed, but has left it.');
+            return();
         }
 
         # stop the storm
