@@ -92,11 +92,8 @@ proc _ncchat_get_channel_full_name(@partialname){
 proc _ncchat_get_players_with_permission(@perm){
     @all_players = all_players();
 
-    @recipients = array_map(@all_players, closure(@recipient){
-        if(has_permission(@recipient, @perm)){
-            return(@recipient);
-        }
-        return();
+    @recipients = array_filter(@all_players, closure(@index, @recipient){
+        return(has_permission(@recipient, @perm));
     });
 
     return(@recipients);
