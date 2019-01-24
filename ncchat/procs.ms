@@ -1,24 +1,24 @@
 proc _ncchat_get_channels(){
     @channels = associative_array();
     @channels['Global'] = associative_array(
-            'color': '&7', # default text color
-        'nick': 'G',
-            'perm': 'herochat.speak.global',
-        'default': true); # if players are subscribed automatically
+	    'color': '&7', # default text color
+    	'nick': 'G',
+	    'perm': 'herochat.speak.global',
+    	'default': true); # if players are subscribed automatically
     @channels['Staff'] = associative_array(
         'color': '&a', # default text color
         'nick': 'S',
-            'perm': 'herochat.speak.staff',
+	    'perm': 'herochat.speak.staff',
         'default': true); # if players are subscribed automatically
     @channels['Local'] = associative_array(
         'color': '&e', # default text color
         'nick': 'L',
-        'perm': 'herochat.speak.local',
+    	'perm': 'herochat.speak.local',
         'default': true); # if players are subscribed automatically
     @channels['Upsidedown'] = associative_array(
         'color': '&b', # default text color
         'nick': 'U',
-        'perm': 'herochat.speak.aharter',
+    	'perm': 'herochat.speak.aharter',
         'default': true); # if players are subscribed automatically
     @channels['Admin'] = associative_array(
         'color': '&c', # default text color
@@ -51,7 +51,7 @@ proc _ncchat_format(@player, @pchannel){
     @col = @channels[@pchannel]['color'];
     @nick = @channels[@pchannel]['nick'];
 
-        return(colorize('&7{&2S&7} '.@col.'['.@nick.'] &f'.@prefix.'%1$s'.@suffix.@col.': %2$s'));
+	return(colorize('&7{&2S&7} '.@col.'['.@nick.'] &f'.@prefix.'%1$s'.@suffix.@col.': %2$s'));
 
     # return('<%1$s> %2$s'); # default format
 }
@@ -79,11 +79,37 @@ proc _ncchat_get_channel_full_name(@partialname){
     @channelfullname = null;
 
     foreach(@channel:@data in @channels){
-        if(@partialname == to_lower(@data['nick']) || @partialname == to_lower(@channel)){ # matches channel nick or complete name
-                @channelfullname = to_lower(@channel);
-                return(concat(to_upper(@channelfullname[0]), @channelfullname[1..]));
-        }
+    	if(@partialname == to_lower(@data['nick']) || @partialname == to_lower(@channel)){ # matches channel nick or complete name
+	        @channelfullname = to_lower(@channel);
+	        return(concat(to_upper(@channelfullname[0]), @channelfullname[1..]));
+    	}
     }
 
     return(@channelfullname);
+}
+
+# Given a permission, returns an array of online players who have that permission
+proc _ncchat_get_players_with_permission(@perm){
+    @all_players = all_players();
+
+    @recipients = array_map(@all_players, closure(@recipient){
+        if(has_permission(@recipient, @perm)){
+            return(@recipient);
+        }
+        return();
+    });
+
+    return(@recipients);
+}
+
+# Given a NCChat text (not JSON) message object, creates a literal chat message
+# the message object is composed of:
+# server: header for origin server (e.g. {S} for main, {D} for discord, etc)
+# channel: channel long name, e.g. "Global"
+# player name: full player name
+# message: the message to send
+# recipients: array of player names
+# literal: whether or not to return an event format string
+proc _ncchat_generate_message(@msgobj){
+    return(false);
 }
