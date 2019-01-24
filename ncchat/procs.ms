@@ -107,6 +107,6 @@ proc _ncchat_get_players_with_permission(@perm){
 # message: the message to send
 # recipients: array of player names
 # literal: whether or not to return an event format string
-proc _ncchat_generate_message(@msgobj){
-    return(false);
-}
+#proc _ncchat_generate_message(@msgobj){
+#    return(false);
+#}
